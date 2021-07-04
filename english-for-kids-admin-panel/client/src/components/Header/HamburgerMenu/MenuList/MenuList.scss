@@ -1,0 +1,39 @@
+.menu__list {
+  display: block;
+  position: fixed;
+  visibility: hidden;
+  top: 0;
+  left: -100%;
+  z-index: 100;
+  width: 320px;
+  height: 100%;
+  margin: 0;
+  padding: 80px 0;
+  list-style: none;
+  text-align: center;
+  background-color: var(--light-color);
+  box-shadow: var(--shadow-color);
+}
+
+.menu__item {
+  display: block;
+  padding: 12px 24px;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-text);
+  border-left: 5px solid transparent;
+  box-sizing: border-box;
+}
+
+.menu__item:hover {
+  border-left: 5px solid var(--br-hov-menu-item);
+  background: var(--bg-hov-menu-item);
+  color: var(--color-text-hov);
+}
+
+.menu__item_active {
+  border-left: 5px solid var(--br-menu-item);
+  background: var(--bg-act-menu-item);
+  color: var(--light-color);
+}

@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import createError from 'http-errors';
+import indexRouter from './routes';
+import routesConstants from './constants/routes';
 
 const app = express();
 
@@ -10,9 +12,7 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/', (req: any, res: any) => {
-  res.send('ok');
-});
+app.use(routesConstants.INDEX, indexRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   next(createError(404));
