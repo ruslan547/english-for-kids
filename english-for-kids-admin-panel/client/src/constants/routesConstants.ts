@@ -4,5 +4,6 @@ export default Object.freeze({
   STATISTICS: '/statistics',
   FINISH: '/finish',
   REPEAT: '/repeat',
+  ADMIN: '/admin',
   ALL: '*',
 });

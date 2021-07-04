@@ -10,6 +10,7 @@ import routesConstants from './constants/routesConstants';
 import { useAppSelector } from './app/hooks';
 import FinishPage from './pages/FinishPage/FinishPage';
 import StatisticsPage from './pages/StatisticsPage/StatisticsPage';
+import AdminPage from './pages/AdminPage/AdminPage';
 import contentConstants from './constants/contentConstants';
 import pathsConstants from './constants/pathsConstants';
 
@@ -35,6 +36,9 @@ function App() {
             </Route>
             <Route path={routesConstants.REPEAT}>
               <CategoryPage />
+            </Route>
+            <Route path={routesConstants.ADMIN}>
+              <AdminPage />
             </Route>
             <Route path={routesConstants.ALL}>
               <div>{contentConstants.NOT_FOUND}</div>
