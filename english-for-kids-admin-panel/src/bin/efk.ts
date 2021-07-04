@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('dotenv').config();
 
 const app = require('../app');
@@ -5,7 +7,9 @@ const app = require('../app');
 const PORT = process.env.PORT || 4000;
 
 const onListening = () => {
-  process.stdout.end(`Listening on ${PORT}`);
+  const str = `Listening on ${PORT}\n`;
+
+  process.stdout.write(str);
 };
 
 app.listen(PORT, onListening);
