@@ -5,5 +5,6 @@ export default Object.freeze({
   FINISH: '/finish',
   REPEAT: '/repeat',
   ADMIN: '/admin',
+  WORDS: '/words',
   ALL: '*',
 });

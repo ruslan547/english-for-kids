@@ -1,0 +1,40 @@
+.admin-header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: var(--main-color);
+}
+
+.admin-header__container {
+  display: flex;
+  list-style-type: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.admin-header__item {
+  margin-right: 20px;
+}
+
+.admin-header__item > a,
+.admin-header__item > button {
+  color: var(--light-color);
+}
+
+.admin-header__item > a {
+  text-decoration: none;
+}
+
+.admin-header__item > button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.admin-header__item:last-child {
+  margin-right: 0;
+  margin-left: auto;
+}

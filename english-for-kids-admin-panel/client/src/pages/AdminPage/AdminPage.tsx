@@ -1,27 +1,24 @@
 import './AdminPage.scss';
 import {
-  Route, Switch, Link, useRouteMatch,
+  Route, Switch, useRouteMatch,
 } from 'react-router-dom';
+import AdminHeader from './AdminHeader/AdminHeader';
+import routesConstants from '../../constants/routesConstants';
+import AdminCategories from './AdminCategories/AdminCategories';
+import AdminWords from './AdminWords/AdminWords';
 
 function AdminPage(): JSX.Element {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <div>
-      <ul>
-        <li>
-          <Link to={url} />
-        </li>
-        <li>
-          <Link to={`${url}/words`} />
-        </li>
-      </ul>
+      <AdminHeader />
       <Switch>
         <Route exact path={path}>
-          <div>category</div>
+          <AdminCategories />
         </Route>
-        <Route path={`${path}/words`}>
-          <div>words</div>
+        <Route path={`${path}${routesConstants.WORDS}`}>
+          <AdminWords />
         </Route>
       </Switch>
     </div>

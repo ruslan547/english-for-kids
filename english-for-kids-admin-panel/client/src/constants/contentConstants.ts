@@ -14,4 +14,7 @@ export default Object.freeze({
   DIFFICULT_WORDS: 'Difficult words',
   LOGIN: 'Login',
   CLOSE: 'close',
+  LOGOUT: 'Log out',
+  CATEGORIES: 'Categories',
+  WORDS: 'Words',
 });
