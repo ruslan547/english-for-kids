@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom';
 import MainPage from './pages/MainPage/MainPage';
 import CategoryPage from './pages/CategoryPage/CategoryPage';
@@ -13,6 +14,7 @@ import StatisticsPage from './pages/StatisticsPage/StatisticsPage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import contentConstants from './constants/contentConstants';
 import pathsConstants from './constants/pathsConstants';
+import { getCookie } from './services/cookiesService';
 
 function App() {
   const { appState } = useAppSelector((state) => state.toggleSwitch);
@@ -38,7 +40,7 @@ function App() {
               <CategoryPage />
             </Route>
             <Route path={routesConstants.ADMIN}>
-              <AdminPage />
+              {getCookie('sessionid') ? <AdminPage /> : <Redirect to={routesConstants.MAIN} />}
             </Route>
             <Route path={routesConstants.ALL}>
               <div>{contentConstants.NOT_FOUND}</div>

@@ -30,3 +30,15 @@
   color: var(--error-color);
   margin-right: 20px;
 }
+
+.login-form__err {
+  color: var(--error-color);
+}
+
+.login-form__info {
+  text-align: right;
+}
+
+.login-form__info > span {
+  color: var(--error-color);
+}

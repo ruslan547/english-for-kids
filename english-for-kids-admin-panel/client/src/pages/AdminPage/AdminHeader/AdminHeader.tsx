@@ -1,10 +1,17 @@
 import './AdminHeader.scss';
-import { useRouteMatch, NavLink } from 'react-router-dom';
+import { useRouteMatch, NavLink, useHistory } from 'react-router-dom';
 import contentConstants from '../../../constants/contentConstants';
 import routesConstants from '../../../constants/routesConstants';
+import { deleteCookie } from '../../../services/cookiesService';
 
 function AdminHeader(): JSX.Element {
   const { url } = useRouteMatch();
+  const history = useHistory();
+
+  const handleClick = (): void => {
+    deleteCookie('sessionid');
+    history.push(routesConstants.MAIN);
+  };
 
   return (
     <div className="admin-header">
@@ -20,7 +27,7 @@ function AdminHeader(): JSX.Element {
           </NavLink>
         </li>
         <li className="admin-header__item">
-          <button type="button">
+          <button type="button" onClick={handleClick}>
             {contentConstants.LOGOUT}
           </button>
         </li>
