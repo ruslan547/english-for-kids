@@ -4,7 +4,7 @@ import { MouseEvent } from 'react';
 import routesConstants from '../../../../constants/routesConstants';
 import { categories } from '../../../../db/cards';
 import { useAppDispatch } from '../../../../app/hooks';
-import { closeMenu } from '../hamburgerMenu';
+import { closeMenu, openModal } from '../hamburgerMenu';
 import { setCurrentWord, setWords, stopGame } from '../../../../pages/CategoryPage/StartBtn/startBtnSlice';
 import { setErrNum, setScore } from '../../../../pages/CategoryPage/ScoreBoard/scoreBoardSlice';
 import settingNumConstants from '../../../../constants/settingNumConstants';
@@ -28,7 +28,7 @@ function MenuList(): JSX.Element {
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>): void => {
     if ((event.target as HTMLButtonElement).name === 'login') {
-      return;
+      dispatch(openModal());
     }
 
     dispatch(stopGame());
@@ -84,7 +84,7 @@ function MenuList(): JSX.Element {
           name="login"
           onClick={handleClick}
         >
-          Login
+          {contentConstants.LOGIN}
         </button>
       </li>
     </ul>

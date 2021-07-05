@@ -12,4 +12,6 @@ export default Object.freeze({
   ERROR: 'Error',
   PERCENT: '%',
   DIFFICULT_WORDS: 'Difficult words',
+  LOGIN: 'Login',
+  CLOSE: 'close',
 });
