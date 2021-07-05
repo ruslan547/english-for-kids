@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import createError from 'http-errors';
 import indexRouter from './routes';
 import routesConstants from './constants/routes';
+import registrationRouter from './routes/registration';
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use(routesConstants.REGISTRATION, registrationRouter);
 app.use(routesConstants.INDEX, indexRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +31,6 @@ app.use((error: createError.HttpError, req: Request, res: Response, next: NextFu
   }
 
   res.status(error.status ?? 500);
-
   res.json({
     status: error.status,
     message: error.message,
