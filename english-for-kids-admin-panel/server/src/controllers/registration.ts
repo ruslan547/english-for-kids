@@ -5,16 +5,16 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/user';
 
 const registration = asyncHandler(async (req: Request, res: Response) => {
-  const { login, password, repeatPassword } = req.body;
+  const { username, password, repeatPassword } = req.body;
 
   if (password === repeatPassword) {
-    const foundUsers = await User.find({ login });
+    const foundUsers = await User.find({ username });
 
     if (!foundUsers.length) {
       const passwordHash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
       const user = new User({
-        login,
+        username,
         password: passwordHash,
       });
 

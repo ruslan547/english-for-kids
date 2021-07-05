@@ -5,7 +5,10 @@ import bodyParser from 'body-parser';
 import createError from 'http-errors';
 import indexRouter from './routes';
 import routesConstants from './constants/routes';
+import loginRouter from './routes/login';
 import registrationRouter from './routes/registration';
+import { validateAuthParam } from './middleware/validate';
+import logoutRouter from './routes/logout';
 
 const app = express();
 
@@ -13,7 +16,9 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(routesConstants.REGISTRATION, registrationRouter);
+app.use(routesConstants.REGISTRATION, validateAuthParam, registrationRouter);
+app.use(routesConstants.LOGIN, validateAuthParam, loginRouter);
+app.use(routesConstants.LOGOUT, logoutRouter);
 app.use(routesConstants.INDEX, indexRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {

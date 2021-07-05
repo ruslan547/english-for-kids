@@ -1,20 +1,20 @@
 import { model, Schema, Types } from 'mongoose';
 
-export interface IUser {
+export interface IToken {
   _id?: Types.ObjectId;
   username: string;
-  password: string;
+  token: string;
 }
 
-const userSchema = new Schema({
+const tokenSchema = new Schema({
   username: {
     type: String,
     require: true,
   },
-  password: {
+  token: {
     type: String,
     require: true,
   },
 });
 
-export const User = model<IUser>('User', userSchema);
+export const Token = model<IToken>('Token', tokenSchema);
