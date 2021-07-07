@@ -5,4 +5,5 @@ export default Object.freeze({
   CATEGORY_PARAM: '/:id',
   BASIC_URL: 'http://localhost:4000',
   LOGIN: '/login',
+  CATEGORY: '/category',
 });

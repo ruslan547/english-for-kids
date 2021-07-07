@@ -17,4 +17,5 @@ export default Object.freeze({
   LOGOUT: 'Log out',
   CATEGORIES: 'Categories',
   WORDS: 'Words',
+  WORDS_COUNT: 'WORDS: ',
 });

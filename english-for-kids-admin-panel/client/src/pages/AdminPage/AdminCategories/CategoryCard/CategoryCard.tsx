@@ -3,8 +3,14 @@
 import './CategoryCard.scss';
 import { MouseEvent, useState } from 'react';
 import AdminBtn from '../../AdminBtn/AdminBtn';
+import contentConstants from '../../../../constants/contentConstants';
 
-function CategoryCard(): JSX.Element {
+interface CategoryCardProps {
+  title: string;
+  words: number;
+}
+
+function CategoryCard({ title, words }: CategoryCardProps): JSX.Element {
   const [isUpdate, setUpdate] = useState(false);
 
   const handleClick = ({ target }: MouseEvent): void => {
@@ -19,7 +25,7 @@ function CategoryCard(): JSX.Element {
 
   return (
     <li className="category-card">
-      {isUpdate ? null : <h3 className="category-card__title">title</h3>}
+      {isUpdate ? null : <h3 className="category-card__title">{title}</h3>}
       <span className="category-card__close" onClick={() => { }} onKeyDown={() => { }}>
         &times;
       </span>
@@ -30,8 +36,10 @@ function CategoryCard(): JSX.Element {
             <input className="category-card__input" type="text" />
           </div>
           : <div className="category-card__count">
-            WORDS:
-            <span className="category-card__count_num"> 5</span>
+            {contentConstants.WORDS_COUNT}
+            <span className="category-card__count_num">
+              {words}
+            </span>
           </div>
       }
       <div className="category-card__btns">

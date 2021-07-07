@@ -15,7 +15,7 @@ export const getCategories = asyncHandler(async (req: Request, res: Response) =>
   res.status(200);
 
   for await (const category of cursor) {
-    res.write(JSON.stringify(`${category},`));
+    res.write(JSON.stringify(category));
   }
 
   res.end();
