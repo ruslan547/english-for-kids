@@ -1,39 +1,89 @@
 /* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable react/jsx-wrap-multilines */
 import './CategoryCard.scss';
-import { MouseEvent, useState } from 'react';
+import {
+  ChangeEvent, MouseEvent, useRef, useState,
+} from 'react';
+import { useHistory } from 'react-router-dom';
 import AdminBtn from '../../AdminBtn/AdminBtn';
 import contentConstants from '../../../../constants/contentConstants';
+import { deleteCategory, updateCategories } from '../../../../services/categoryService';
+import routesConstants from '../../../../constants/routesConstants';
+
+const {
+  ADMIN,
+  WORDS,
+} = routesConstants;
 
 interface CategoryCardProps {
+  id: string;
   title: string;
   words: number;
 }
 
-function CategoryCard({ title, words }: CategoryCardProps): JSX.Element {
+function CategoryCard({ id, title, words }: CategoryCardProps): JSX.Element {
+  const firstTitle = useRef('');
+  const history = useHistory();
   const [isUpdate, setUpdate] = useState(false);
+  const [titleText, setTitleText] = useState(title);
+  const [loading, setLoading] = useState(false);
 
-  const handleClick = ({ target }: MouseEvent): void => {
+  const handleClick = async ({ target }: MouseEvent): Promise<void> => {
     const { name } = target as HTMLButtonElement;
 
     if (name === 'update') {
+      firstTitle.current = titleText;
       setUpdate((prevState) => !prevState);
     } else if (name === 'cancel') {
+      setTitleText(firstTitle.current);
+      firstTitle.current = '';
       setUpdate((prevState) => !prevState);
+    } else if (name === 'create') {
+      setLoading(true);
+
+      try {
+        await updateCategories(id, titleText);
+      } catch (err) {
+        setTitleText(firstTitle.current);
+        console.log(err);
+      }
+
+      setUpdate(false);
+      setLoading(false);
+    } else if (name === 'delete') {
+      setLoading(true);
+
+      try {
+        await deleteCategory(id);
+      } catch (err) {
+        console.log(err);
+      }
+
+      setLoading(false);
+    } else if (name === 'add') {
+      history.push(`${`${ADMIN + WORDS}/${id}`}`);
     }
   };
 
+  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setTitleText(target.value);
+  };
+
+  if (!titleText) {
+    return <></>;
+  }
+
   return (
     <li className="category-card">
-      {isUpdate ? null : <h3 className="category-card__title">{title}</h3>}
-      <span className="category-card__close" onClick={() => { }} onKeyDown={() => { }}>
+      {isUpdate ? null : <h3 className="category-card__title">{titleText}</h3>}
+      <button className="category-card__close" disabled={loading} type="button" name="delete" onClick={handleClick}>
         &times;
-      </span>
+      </button>
       {
         isUpdate
           ? <div className="category-card__category-update">
             <label className="category-card__label" htmlFor="">Category name</label>
-            <input className="category-card__input" type="text" />
+            <input className="category-card__input" type="text" value={titleText} onChange={handleChange} />
           </div>
           : <div className="category-card__count">
             {contentConstants.WORDS_COUNT}
@@ -48,7 +98,7 @@ function CategoryCard({ title, words }: CategoryCardProps): JSX.Element {
             <span className="category-card__cancel">
               <AdminBtn name="cancel" content="Cancel" onClick={handleClick} />
             </span>
-            <AdminBtn name="add" content="Create" onClick={handleClick} />
+            <AdminBtn name="create" content="Create" disabled={loading} onClick={handleClick} />
           </>
           : <>
             <AdminBtn name="update" content="Update" onClick={handleClick} />

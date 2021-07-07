@@ -13,9 +13,10 @@ function AdminCategories(): JSX.Element {
     setCategories(data);
   };
 
-  const createCategoriesList = () => categories.map(({ title, words }) => (
+  const createCategoriesList = () => categories.map(({ _id, title, words }) => (
     <CategoryCard
-      key={title}
+      key={_id}
+      id={_id}
       title={title}
       words={words}
     />

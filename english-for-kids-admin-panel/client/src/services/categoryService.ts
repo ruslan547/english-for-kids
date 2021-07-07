@@ -6,7 +6,7 @@ const {
 } = pathsConstants;
 
 export interface Category {
-  _id?: string;
+  _id: string;
   title: string;
   words: number;
   __v: number;
@@ -20,6 +20,40 @@ export const getCategories = async (): Promise<Category[]> => {
   return JSON.parse(json);
 };
 
-export const createCategories = () => {
+export const createCategories = async () => {
+  const res = await fetch(BASIC_URL + CATEGORY, {
+    method: 'POST',
+  });
 
+  const json = await res.json();
+
+  return json;
+};
+
+export const updateCategories = async (_id: string, title: string) => {
+  const res = await fetch(BASIC_URL + CATEGORY, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ _id, title }),
+  });
+
+  const json = await res.json();
+
+  return json;
+};
+
+export const deleteCategory = async (_id: string) => {
+  const res = await fetch(BASIC_URL + CATEGORY, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ _id }),
+  });
+
+  const json = await res.json();
+
+  return json;
 };

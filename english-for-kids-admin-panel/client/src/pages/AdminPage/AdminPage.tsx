@@ -6,6 +6,8 @@ import routesConstants from '../../constants/routesConstants';
 import AdminCategories from './AdminCategories/AdminCategories';
 import AdminWords from './AdminWords/AdminWords';
 import Footer from '../../components/Footer/Footer';
+import pathsConstants from '../../constants/pathsConstants';
+// import pathsConstants from '../../constants/pathsConstants';
 
 function AdminPage(): JSX.Element {
   const { path } = useRouteMatch();
@@ -17,7 +19,7 @@ function AdminPage(): JSX.Element {
         <Route exact path={path}>
           <AdminCategories />
         </Route>
-        <Route path={`${path}${routesConstants.WORDS}`}>
+        <Route path={path + routesConstants.WORDS + pathsConstants.CATEGORY_PARAM}>
           <AdminWords />
         </Route>
       </Switch>

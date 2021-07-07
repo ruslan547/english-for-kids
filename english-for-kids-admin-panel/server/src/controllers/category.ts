@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import createError from 'http-errors';
 import { Category } from '../models/category';
 
 export const getCategories = asyncHandler(async (req: Request, res: Response) => {
@@ -22,29 +21,22 @@ export const getCategories = asyncHandler(async (req: Request, res: Response) =>
 });
 
 export const createCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { title } = req.body;
-  const foundCategory = (await Category.find({ title }))[0];
-
-  if (foundCategory) {
-    throw createError(400, 'The category already exists');
-  }
-
-  const category = new Category({ title, words: 0 });
+  const category = new Category({ title: 'New Category', words: 0 });
 
   await category.save();
   res.status(201).json(category);
 });
 
 export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { title, newTitle } = req.body;
+  const { _id, title } = req.body;
 
-  await Category.findOneAndUpdate({ title }, { title: newTitle }, { new: true });
+  await Category.findOneAndUpdate({ _id }, { title }, { new: true });
   res.status(200).json({ message: 'Updated' });
 });
 
 export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { title } = req.body;
+  const { _id } = req.body;
 
-  await Category.find({ title }).remove().exec();
+  await Category.find({ _id }).remove().exec();
   res.status(200).json({ message: 'Deleted' });
 });
