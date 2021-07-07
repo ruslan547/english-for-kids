@@ -1,4 +1,3 @@
-import './AdminPage.scss';
 import {
   Route, Switch, useRouteMatch,
 } from 'react-router-dom';
@@ -6,12 +5,13 @@ import AdminHeader from './AdminHeader/AdminHeader';
 import routesConstants from '../../constants/routesConstants';
 import AdminCategories from './AdminCategories/AdminCategories';
 import AdminWords from './AdminWords/AdminWords';
+import Footer from '../../components/Footer/Footer';
 
 function AdminPage(): JSX.Element {
   const { path } = useRouteMatch();
 
   return (
-    <div>
+    <div className="page">
       <AdminHeader />
       <Switch>
         <Route exact path={path}>
@@ -21,6 +21,7 @@ function AdminPage(): JSX.Element {
           <AdminWords />
         </Route>
       </Switch>
+      <Footer />
     </div>
   );
 }

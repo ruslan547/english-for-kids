@@ -25,8 +25,8 @@ function LoginForm({
     try {
       const data = await login(username, password);
       setCookie('sessionid', data.token);
-      history.push(routesConstants.ADMIN);
       onClose();
+      setTimeout(() => history.push(routesConstants.ADMIN), 0);
     } catch (err) {
       setError(err.message);
       (target as HTMLButtonElement).disabled = false;
