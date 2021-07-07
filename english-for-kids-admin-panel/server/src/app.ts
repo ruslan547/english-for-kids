@@ -9,6 +9,7 @@ import loginRouter from './routes/login';
 import registrationRouter from './routes/registration';
 import { validateAuthParam } from './middleware/validate';
 import logoutRouter from './routes/logout';
+import categoryRouter from './routes/category';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use(routesConstants.REGISTRATION, validateAuthParam, registrationRouter);
 app.use(routesConstants.LOGIN, validateAuthParam, loginRouter);
 app.use(routesConstants.LOGOUT, logoutRouter);
+app.use(routesConstants.CATEGORY, categoryRouter);
 app.use(routesConstants.INDEX, indexRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {

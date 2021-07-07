@@ -9,7 +9,6 @@ export const validateAuthParam = (
 ): void => {
   const { username, password } = req.body;
 
-  console.log('valid');
   if (typeof username !== 'string' || typeof password !== 'string') {
     throw createError(400, 'Invalid param');
   }
