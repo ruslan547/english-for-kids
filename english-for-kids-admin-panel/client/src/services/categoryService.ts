@@ -1,4 +1,5 @@
 import pathsConstants from '../constants/pathsConstants';
+import settingNumConstants from '../constants/settingNumConstants';
 
 const {
   BASIC_URL,
@@ -12,8 +13,8 @@ export interface Category {
   __v: number;
 }
 
-export const getCategories = async (): Promise<Category[]> => {
-  const res = await fetch(BASIC_URL + CATEGORY);
+export const getCategories = async (page: number, limit: number): Promise<Category[]> => {
+  const res = await fetch(`${BASIC_URL + CATEGORY}?page=${page}&limit=${limit}`);
   const text = await res.text();
   const json = `[${text.replaceAll('}', '},').slice(0, -1)}]`;
 

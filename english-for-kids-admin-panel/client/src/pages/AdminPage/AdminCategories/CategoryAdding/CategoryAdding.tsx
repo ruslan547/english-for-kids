@@ -1,15 +1,21 @@
 import { useState } from 'react';
-import { createCategories } from '../../../../services/categoryService';
+import { Category, createCategories } from '../../../../services/categoryService';
 import './CategoryAdding.scss';
 
-function CategoryAdding(): JSX.Element {
+interface CategoryAddingProps {
+  addCategory: (category: Category) => void;
+}
+
+function CategoryAdding({ addCategory }: CategoryAddingProps): JSX.Element {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     setLoading(true);
 
     try {
-      await createCategories();
+      const category = await createCategories();
+
+      addCategory(category);
     } catch (err) {
       console.log(err);
     }

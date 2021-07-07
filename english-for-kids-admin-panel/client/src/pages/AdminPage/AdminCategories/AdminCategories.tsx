@@ -1,16 +1,30 @@
 import './AdminCategories.scss';
-import { useEffect, useState } from 'react';
+import {
+  useEffect, useRef, useState,
+} from 'react';
 import CategoryCard from './CategoryCard/CategoryCard';
 import CategoryAdding from './CategoryAdding/CategoryAdding';
 import { Category, getCategories } from '../../../services/categoryService';
+import settingNumConstants from '../../../constants/settingNumConstants';
+
+const {
+  PAGE_LIMIT,
+  PAGE_LIMIT_INIT,
+} = settingNumConstants;
 
 function AdminCategories(): JSX.Element {
   const [categories, setCategories] = useState<Category[]>([]);
+  const ul = useRef<HTMLUListElement>(null);
+  const [page, setPage] = useState(0);
 
-  const getData = async () => {
-    const data = await getCategories();
+  const addCategory = (category: Category) => {
+    setCategories((prevState) => [...prevState, category]);
+  };
 
-    setCategories(data);
+  const addCategories = async (num: number) => {
+    const data = await getCategories(num, page ? PAGE_LIMIT : PAGE_LIMIT_INIT);
+
+    setCategories((prevState) => [...prevState, ...data]);
   };
 
   const createCategoriesList = () => categories.map(({ _id, title, words }) => (
@@ -22,14 +36,22 @@ function AdminCategories(): JSX.Element {
     />
   ));
 
+  const handleScroll = () => {
+    if (ul && ul.current) {
+      if (ul.current.scrollTop + ul.current.clientHeight >= ul.current.scrollHeight) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    }
+  };
+
   useEffect(() => {
-    getData();
-  }, [categories]);
+    addCategories(page);
+  }, [page]);
 
   return (
-    <ul className="admin-categories">
+    <ul className="admin-categories" ref={ul} onScroll={handleScroll}>
       {createCategoriesList()}
-      <CategoryAdding />
+      <CategoryAdding addCategory={addCategory} />
     </ul>
   );
 }

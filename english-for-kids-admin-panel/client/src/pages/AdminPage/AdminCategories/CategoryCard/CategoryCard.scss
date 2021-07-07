@@ -8,12 +8,8 @@
   box-sizing: border-box;
   border: 1px solid var(--simple-color);
   list-style-type: none;
-  margin-right: 20px;
+  margin: 10px;
   margin-bottom: 20px;
-}
-
-.category-card:last-child {
-  margin-right: 0;
 }
 
 .category-card__btns {
