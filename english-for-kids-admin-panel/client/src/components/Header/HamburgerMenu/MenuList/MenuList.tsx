@@ -9,11 +9,13 @@ import { setCurrentWord, setWords, stopGame } from '../../../../pages/CategoryPa
 import { setErrNum, setScore } from '../../../../pages/CategoryPage/ScoreBoard/scoreBoardSlice';
 import settingNumConstants from '../../../../constants/settingNumConstants';
 import contentConstants from '../../../../constants/contentConstants';
+import { getCookie } from '../../../../services/cookiesService';
 
 const {
   MAIN,
   CATEGORY,
   STATISTICS,
+  ADMIN,
 } = routesConstants;
 
 const {
@@ -78,14 +80,20 @@ function MenuList(): JSX.Element {
         </Link>
       </li>
       <li className="menu__last-item">
-        <button
-          className="menu__login-btn"
-          type="button"
-          name="login"
-          onClick={handleClick}
-        >
-          {contentConstants.LOGIN}
-        </button>
+        {
+          getCookie('sessionid')
+            ? <Link className="menu__item" to={ADMIN}>Admin</Link>
+            : (
+              <button
+                className="menu__login-btn"
+                type="button"
+                name="login"
+                onClick={handleClick}
+              >
+                {contentConstants.LOGIN}
+              </button>
+            )
+        }
       </li>
     </ul>
   );

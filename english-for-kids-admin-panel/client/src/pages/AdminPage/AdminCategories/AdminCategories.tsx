@@ -17,10 +17,6 @@ function AdminCategories(): JSX.Element {
   const ul = useRef<HTMLUListElement>(null);
   const [page, setPage] = useState(0);
 
-  const addCategory = (category: Category) => {
-    setCategories((prevState) => [...prevState, category]);
-  };
-
   const addCategories = async (num: number) => {
     const data = await getCategories(num, page ? PAGE_LIMIT : PAGE_LIMIT_INIT);
 
@@ -33,10 +29,11 @@ function AdminCategories(): JSX.Element {
       id={_id}
       title={title}
       words={words}
+      setCategories={setCategories}
     />
   ));
 
-  const handleScroll = () => {
+  const nextPage = (): void => {
     if (ul && ul.current) {
       if (ul.current.scrollTop + ul.current.clientHeight >= ul.current.scrollHeight) {
         setPage((prevPage) => prevPage + 1);
@@ -44,14 +41,22 @@ function AdminCategories(): JSX.Element {
     }
   };
 
+  const handleScroll = () => {
+    nextPage();
+  };
+
   useEffect(() => {
     addCategories(page);
   }, [page]);
 
+  useEffect(() => {
+    nextPage();
+  }, []);
+
   return (
     <ul className="admin-categories" ref={ul} onScroll={handleScroll}>
       {createCategoriesList()}
-      <CategoryAdding addCategory={addCategory} />
+      <CategoryAdding setCategories={setCategories} />
     </ul>
   );
 }

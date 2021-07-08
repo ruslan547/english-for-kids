@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Category, createCategories } from '../../../../services/categoryService';
 import './CategoryAdding.scss';
 
 interface CategoryAddingProps {
-  addCategory: (category: Category) => void;
+  setCategories: Dispatch<SetStateAction<Category[]>>;
 }
 
-function CategoryAdding({ addCategory }: CategoryAddingProps): JSX.Element {
+function CategoryAdding({ setCategories }: CategoryAddingProps): JSX.Element {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
@@ -15,7 +15,7 @@ function CategoryAdding({ addCategory }: CategoryAddingProps): JSX.Element {
     try {
       const category = await createCategories();
 
-      addCategory(category);
+      setCategories((prevState) => [...prevState, category]);
     } catch (err) {
       console.log(err);
     }

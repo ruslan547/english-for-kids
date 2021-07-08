@@ -1,13 +1,11 @@
-/* eslint-disable react/jsx-closing-tag-location */
-/* eslint-disable react/jsx-wrap-multilines */
 import './CategoryCard.scss';
 import {
-  ChangeEvent, MouseEvent, useRef, useState,
+  ChangeEvent, Dispatch, MouseEvent, SetStateAction, useRef, useState,
 } from 'react';
 import { useHistory } from 'react-router-dom';
 import AdminBtn from '../../AdminBtn/AdminBtn';
 import contentConstants from '../../../../constants/contentConstants';
-import { deleteCategory, updateCategories } from '../../../../services/categoryService';
+import { Category, deleteCategory, updateCategories } from '../../../../services/categoryService';
 import routesConstants from '../../../../constants/routesConstants';
 
 const {
@@ -19,9 +17,15 @@ interface CategoryCardProps {
   id: string;
   title: string;
   words: number;
+  setCategories: Dispatch<SetStateAction<Category[]>>
 }
 
-function CategoryCard({ id, title, words }: CategoryCardProps): JSX.Element {
+function CategoryCard({
+  id,
+  title,
+  words,
+  setCategories,
+}: CategoryCardProps): JSX.Element {
   const firstTitle = useRef('');
   const history = useHistory();
   const [isUpdate, setUpdate] = useState(false);
@@ -55,6 +59,7 @@ function CategoryCard({ id, title, words }: CategoryCardProps): JSX.Element {
 
       try {
         await deleteCategory(id);
+        setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
       } catch (err) {
         console.log(err);
       }
@@ -81,29 +86,39 @@ function CategoryCard({ id, title, words }: CategoryCardProps): JSX.Element {
       </button>
       {
         isUpdate
-          ? <div className="category-card__category-update">
-            <label className="category-card__label" htmlFor="">Category name</label>
-            <input className="category-card__input" type="text" value={titleText} onChange={handleChange} />
-          </div>
-          : <div className="category-card__count">
-            {contentConstants.WORDS_COUNT}
-            <span className="category-card__count_num">
-              {words}
-            </span>
-          </div>
+          ? (
+            <div className="category-card__category-update">
+              <label className="category-card__label" htmlFor="">Category name</label>
+              <input className="category-card__input" type="text" value={titleText} onChange={handleChange} />
+            </div>
+          )
+          : (
+            <div className="category-card__count">
+              {contentConstants.WORDS_COUNT}
+              <span className="category-card__count_num">
+                {words}
+              </span>
+            </div>
+          )
       }
       <div className="category-card__btns">
-        {isUpdate
-          ? <>
-            <span className="category-card__cancel">
-              <AdminBtn name="cancel" content="Cancel" onClick={handleClick} />
-            </span>
-            <AdminBtn name="create" content="Create" disabled={loading} onClick={handleClick} />
-          </>
-          : <>
-            <AdminBtn name="update" content="Update" onClick={handleClick} />
-            <AdminBtn name="add" content="Add word" onClick={handleClick} />
-          </>}
+        {
+          isUpdate
+            ? (
+              <>
+                <span className="category-card__cancel">
+                  <AdminBtn name="cancel" content="Cancel" onClick={handleClick} />
+                </span>
+                <AdminBtn name="create" content="Create" disabled={loading} onClick={handleClick} />
+              </>
+            )
+            : (
+              <>
+                <AdminBtn name="update" content="Update" onClick={handleClick} />
+                <AdminBtn name="add" content="Add word" onClick={handleClick} />
+              </>
+            )
+        }
       </div>
     </li>
   );
