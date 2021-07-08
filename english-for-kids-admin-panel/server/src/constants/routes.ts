@@ -4,4 +4,5 @@ export default Object.freeze({
   LOGIN: '/login',
   LOGOUT: '/logout',
   CATEGORY: '/category',
+  WORDS: '/words',
 });
