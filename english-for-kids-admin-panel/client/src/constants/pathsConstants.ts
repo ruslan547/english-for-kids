@@ -6,4 +6,5 @@ export default Object.freeze({
   BASIC_URL: 'http://localhost:4000',
   LOGIN: '/login',
   CATEGORY: '/category',
+  WORDS: '/words',
 });
