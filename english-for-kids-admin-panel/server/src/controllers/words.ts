@@ -58,16 +58,56 @@ export const getCards = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateCard = asyncHandler(async (req: Request, res: Response) => {
-  const { _id } = req.body;
+  const {
+    _id, word, translation, category,
+  } = req.body;
+  let { image, audio } = req.body;
 
-  await Card.find({ _id }).remove().exec();
-  // createCard(req, res);
+  await v2.uploader.destroy(image);
+  await v2.uploader.destroy(audio);
+
+  if (req.files) {
+    // @ts-expect-error
+    image = (await v2.uploader.upload(req.files.image[0].path)).secure_url;
+    audio = (await v2.uploader.upload(
+      // @ts-expect-error
+      req.files.audio[0].path,
+      { resource_type: 'video' },
+    )).secure_url;
+
+    const card = new Card({
+      word,
+      translation,
+      category,
+      image,
+      audio,
+    });
+
+    await card.save();
+
+    // @ts-expect-error
+    fs.unlink(req.files.image[0].path, (err) => {
+      throw err;
+    });
+
+    // @ts-expect-error
+    fs.unlink(req.files.audio[0].path, (err) => {
+      throw err;
+    });
+  }
+
+  await Card.findOneAndUpdate({ _id }, {
+    word, translation, image, audio,
+  }, { new: true });
+
   res.status(200).json({ message: 'Updated' });
 });
 
 export const deleteCard = asyncHandler(async (req: Request, res: Response) => {
-  const { _id } = req.body;
+  const { _id, image, audio } = req.body;
 
+  await v2.uploader.destroy(image);
+  await v2.uploader.destroy(audio);
   await Card.find({ _id }).remove().exec();
   res.status(200).json({ message: 'Deleted' });
 });
