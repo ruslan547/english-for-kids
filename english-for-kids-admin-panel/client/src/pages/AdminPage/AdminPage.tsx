@@ -1,4 +1,5 @@
 import {
+  Redirect,
   Route, Switch, useRouteMatch,
 } from 'react-router-dom';
 import AdminHeader from './AdminHeader/AdminHeader';
@@ -22,6 +23,7 @@ function AdminPage(): JSX.Element {
         <Route path={path + routesConstants.WORDS + pathsConstants.CATEGORY_PARAM}>
           <AdminWords />
         </Route>
+        <Redirect to={routesConstants.ADMIN} />
       </Switch>
       <Footer />
     </div>

@@ -16,11 +16,13 @@ function AdminCategories(): JSX.Element {
   const [categories, setCategories] = useState<Category[]>([]);
   const ul = useRef<HTMLUListElement>(null);
   const [page, setPage] = useState(0);
+  const [count, setCount] = useState(0);
 
   const addCategories = async (num: number) => {
     const data = await getCategories(num, page ? PAGE_LIMIT : PAGE_LIMIT_INIT);
 
-    setCategories((prevState) => [...prevState, ...data]);
+    setCategories((prevState) => [...prevState, ...data.categories]);
+    setCount(+data.count);
   };
 
   const createCategoriesList = () => categories.map(({ _id, title, words }) => (
@@ -33,28 +35,51 @@ function AdminCategories(): JSX.Element {
     />
   ));
 
-  const nextPage = (): void => {
+  const isScroll = () => {
     if (ul && ul.current) {
-      if (ul.current.scrollTop + ul.current.clientHeight >= ul.current.scrollHeight) {
-        setPage((prevPage) => prevPage + 1);
-      }
+      return ul.current.scrollHeight > ul.current.clientHeight;
     }
+
+    return false;
   };
 
+  // const nextPage = (): void => {
+  //   console.log(count);
+  //   if (ul && ul.current) {
+  //     if (ul.current.scrollTop + ul.current.clientHeight >= ul.current.scrollHeight) {
+  //       setPage((prevPage) => prevPage + 1);
+  //     }
+  //   }
+  // };
+
   const handleScroll = () => {
-    nextPage();
+    // nextPage();
   };
 
   useEffect(() => {
     addCategories(page);
-  }, [page]);
+  }, []);
 
   useEffect(() => {
-    nextPage();
-  }, []);
+    if (!isScroll && categories.length < count) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    console.log('useE', page);
+    addCategories(page);
+  }, [page]);
+
+  // useEffect(() => {
+  //   if (!isScroll) {
+  //     nextPage();
+  //   }
+  // }, [categories]);
 
   return (
     <ul className="admin-categories" ref={ul} onScroll={handleScroll}>
+      {console.log(page, categories)}
       {createCategoriesList()}
       <CategoryAdding setCategories={setCategories} />
     </ul>

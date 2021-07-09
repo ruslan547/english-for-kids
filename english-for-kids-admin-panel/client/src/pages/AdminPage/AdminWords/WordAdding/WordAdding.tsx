@@ -29,19 +29,14 @@ function WordAdding({ category, setCards }: WordAddingProps): JSX.Element {
 
     if (name === 'create' && formRef.current) {
       setLoading(true);
-      createCard(formRef.current, category)
-        .then((data) => {
-          setCards((prevCards) => [...prevCards, JSON.parse(data as string)]);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setWordText('');
-          setTranslationText('');
-          setCreate(false);
-          setLoading(false);
-        });
+
+      const data = await createCard(formRef.current, category);
+
+      setCards((prevCards) => [...prevCards, data as Card]);
+      setWordText('');
+      setTranslationText('');
+      setCreate(false);
+      setLoading(false);
     } else if (tagName === 'LI') {
       setCreate((prevState) => {
         if (!prevState) {
@@ -67,7 +62,7 @@ function WordAdding({ category, setCards }: WordAddingProps): JSX.Element {
 
   return (
     <li
-      className={`word-card ${!isCreate ? 'word-card__add' : ''}`}
+      className={`word-card ${!isCreate ? 'card-add' : ''}`}
       onClick={handleClick}
       onKeyDown={() => { }}
     >

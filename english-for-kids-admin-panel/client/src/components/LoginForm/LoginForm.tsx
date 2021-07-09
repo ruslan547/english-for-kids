@@ -47,10 +47,10 @@ function LoginForm({
     <form className="login-form" action="">
       <div className="login-form__info">
         login:
-        <span> user</span>
+        <span> admin</span>
         <br />
         password:
-        <span> 1234</span>
+        <span> admin</span>
       </div>
       {error ? <div className="login-form__err">{error}</div> : null}
       <input

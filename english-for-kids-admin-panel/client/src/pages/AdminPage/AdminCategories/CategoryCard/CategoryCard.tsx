@@ -49,7 +49,6 @@ function CategoryCard({
         await updateCategories(id, titleText);
       } catch (err) {
         setTitleText(firstTitle.current);
-        console.log(err);
       }
 
       setUpdate(false);
@@ -57,13 +56,8 @@ function CategoryCard({
     } else if (name === 'delete') {
       setLoading(true);
 
-      try {
-        await deleteCategory(id);
-        setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
-      } catch (err) {
-        console.log(err);
-      }
-
+      await deleteCategory(id);
+      setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
       setLoading(false);
     } else if (name === 'add') {
       history.push(`${`${ADMIN + WORDS}/${id}`}`);
@@ -73,10 +67,6 @@ function CategoryCard({
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setTitleText(target.value);
   };
-
-  if (!titleText) {
-    return <></>;
-  }
 
   return (
     <li className="category-card">

@@ -3,6 +3,8 @@ export default Object.freeze({
   INDEX_OF_CATEGORY_TITLE: 0,
   MENU_ITEM_NUM: 8,
   STAR_MARGIN: 45,
-  PAGE_LIMIT_INIT: 15,
-  PAGE_LIMIT: 16,
+  // PAGE_LIMIT_INIT: 15,
+  // PAGE_LIMIT: 16,
+  PAGE_LIMIT_INIT: 5,
+  PAGE_LIMIT: 6,
 });

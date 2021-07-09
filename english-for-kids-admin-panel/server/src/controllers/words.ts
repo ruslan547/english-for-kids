@@ -2,12 +2,18 @@ import { Request, Response } from 'express';
 import fs from 'fs';
 import asyncHandler from 'express-async-handler';
 import { v2 } from 'cloudinary';
+import { Category, ICategory } from '../models/category';
 import { Card, ICard } from '../models/card';
+import pathsConstants from '../constants/paths';
 
 export const createCard = asyncHandler(async (req: Request, res: Response): Promise<void> => {
-  if (req.files) {
-    const { word, translation, category } = req.body;
-    const image = (await v2.uploader.upload(
+  const { word, translation, category } = req.body;
+  let image;
+  let audio;
+
+  // @ts-expect-error
+  if (req.files.image) {
+    image = (await v2.uploader.upload(
       // @ts-expect-error
       req.files.image[0].path,
       {
@@ -15,7 +21,20 @@ export const createCard = asyncHandler(async (req: Request, res: Response): Prom
         filename_override: word,
       },
     )).secure_url;
-    const audio = (await v2.uploader.upload(
+
+    // @ts-expect-error
+    fs.unlink(req.files.image[0].path, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  } else {
+    image = pathsConstants.IMG_FILLER;
+  }
+
+  // @ts-expect-error
+  if (req.files.audio) {
+    audio = (await v2.uploader.upload(
       // @ts-expect-error
       req.files.audio[0].path,
       {
@@ -25,28 +44,35 @@ export const createCard = asyncHandler(async (req: Request, res: Response): Prom
       },
     )).secure_url;
 
-    const card = new Card({
-      word,
-      translation,
-      category,
-      image,
-      audio,
-    });
-
-    await card.save();
-
-    res.status(201).json(card);
-
-    // @ts-expect-error
-    fs.unlink(req.files.image[0].path, (err) => {
-      throw err;
-    });
-
     // @ts-expect-error
     fs.unlink(req.files.audio[0].path, (err) => {
-      throw err;
+      if (err) {
+        throw err;
+      }
     });
+  } else {
+    audio = pathsConstants.AUDIO_FILLER;
   }
+
+  const card = new Card({
+    word,
+    translation,
+    category,
+    image,
+    audio,
+  });
+
+  await card.save();
+
+  const { words } = await Category.findById(category) as unknown as ICategory;
+
+  await Category.findByIdAndUpdate(
+    category,
+    { words: words + 1 },
+    { new: true },
+  );
+
+  res.status(201).json(card);
 });
 
 export const getCards = asyncHandler(async (req: Request, res: Response) => {
@@ -56,7 +82,7 @@ export const getCards = asyncHandler(async (req: Request, res: Response) => {
   const body = [];
 
   const cursor = Card.find({ category }, null, { limit, skip }).cursor();
-  const count = Card.count();
+  const count = await Card.count();
 
   res.header('X-Total-Count', count.toString());
   res.header('Access-Control-Expose-Headers', `X-Total-Count${skip ? ', Link' : ''}`);
@@ -69,15 +95,14 @@ export const getCards = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateCard = asyncHandler(async (req: Request, res: Response) => {
-  console.log(req.files.image);
   const { _id, word, translation } = req.body;
   const updatedCard = await Card.findById(_id);
   let { image, audio } = updatedCard as ICard;
 
-  await v2.uploader.destroy(image);
-  await v2.uploader.destroy(audio);
+  // @ts-expect-error
+  if (req.files.image) {
+    await v2.uploader.destroy(image);
 
-  if (req.files) {
     image = (await v2.uploader.upload(
       // @ts-expect-error
       req.files.image[0].path,
@@ -86,6 +111,19 @@ export const updateCard = asyncHandler(async (req: Request, res: Response) => {
         filename_override: word,
       },
     )).secure_url;
+
+    // @ts-expect-error
+    fs.unlink(req.files.image[0].path, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+
+  // @ts-expect-error
+  if (req.files.audio) {
+    await v2.uploader.destroy(audio);
+
     audio = (await v2.uploader.upload(
       // @ts-expect-error
       req.files.audio[0].path,
@@ -97,21 +135,18 @@ export const updateCard = asyncHandler(async (req: Request, res: Response) => {
     )).secure_url;
 
     // @ts-expect-error
-    fs.unlink(req.files.image[0].path, (err) => {
-      throw err;
-    });
-
-    // @ts-expect-error
     fs.unlink(req.files.audio[0].path, (err) => {
-      throw err;
+      if (err) {
+        throw err;
+      }
     });
   }
 
-  await Card.findOneAndUpdate({ _id }, {
+  const card = await Card.findOneAndUpdate({ _id }, {
     word, translation, image, audio,
   }, { new: true });
 
-  res.status(200).json({ message: 'Updated' });
+  res.status(200).json(card);
 });
 
 export const deleteCard = asyncHandler(async (req: Request, res: Response) => {
@@ -119,8 +154,17 @@ export const deleteCard = asyncHandler(async (req: Request, res: Response) => {
   const deletedCard = (await Card.find({ _id }))[0];
   const { image, audio } = deletedCard;
 
+  const { words } = await Category.findById(deletedCard.category) as unknown as ICategory;
+
+  await Category.findByIdAndUpdate(
+    deletedCard.category,
+    { words: words - 1 },
+    { new: true },
+  );
+
   await Card.findByIdAndDelete(_id);
   await v2.uploader.destroy(image);
   await v2.uploader.destroy(audio);
+
   res.status(200).json({ message: 'Deleted' });
 });

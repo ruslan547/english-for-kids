@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { Card, getCards } from '../../../services/wordsService';
 import WordAdding from './WordAdding/WordAdding';
 import WordCard from './WordCard/WordCard';
 import settingNumConstants from '../../../constants/settingNumConstants';
+import routesConstants from '../../../constants/routesConstants';
 
 const {
   PAGE_LIMIT,
@@ -55,7 +56,7 @@ function AdminWords(): JSX.Element {
 
   useEffect(() => {
     nextPage();
-  }, []);
+  });
 
   return (
     <ul className="admin-categories" ref={ul} onScroll={handleScroll}>

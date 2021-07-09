@@ -1,8 +1,8 @@
-.word-card__add {
+.card-add {
   cursor: pointer;
 }
 
-.word-card__add::after {
+.card-add::after {
   content: '+';
   position: absolute;
   top: 50%;

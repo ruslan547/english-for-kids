@@ -59,13 +59,18 @@ function WordCard({
 
       try {
         if (formRef && formRef.current) {
-          console.log(formRef.current);
-          const data = await updateCard(formRef.current, category, id);
-          console.log(data);
+          const data = (await updateCard(formRef.current, category, id)) as Card;
+          setCards((prevState) => prevState.map((item: Card) => {
+            if (item._id === data._id) {
+              return data as Card;
+            }
+
+            return item;
+          }));
         }
       } catch (err) {
         setWordText(firstWord.current);
-        console.log(err);
+        setTranslationText(firstTranslation.current);
       }
 
       setUpdate(false);
@@ -73,13 +78,8 @@ function WordCard({
     } else if (name === 'delete') {
       setLoading(true);
 
-      try {
-        await deleteCard(id);
-        setCards((prevState) => prevState.filter(({ _id }) => _id !== id));
-      } catch (err) {
-        console.log(err);
-      }
-
+      await deleteCard(id);
+      setCards((prevState) => prevState.filter(({ _id }) => _id !== id));
       setLoading(false);
     }
   };
@@ -100,35 +100,46 @@ function WordCard({
       {
         isUpdate
           ? (
-            <form ref={formRef} action="" onSubmit={() => false}>
-              <input type="text" required name="category" value={category} onChange={handleChange} />
-              <input type="text" required name="word" value={wordText} onChange={handleChange} />
-              <input type="text" required name="translation" value={translationText} onChange={handleChange} />
-              <input type="file" required name="image" onChange={handleChange} />
-              <input type="file" required name="audio" onChange={handleChange} />
+            <form className="word-card__form" ref={formRef} action="" onSubmit={() => false}>
+              <div>
+                <span>Word:</span>
+                <br />
+                <input type="text" required name="word" value={wordText} onChange={handleChange} />
+              </div>
+              <div>
+                <span>Translation:</span>
+                <input type="text" required name="translation" value={translationText} onChange={handleChange} />
+              </div>
+              <div>
+                <span>Image:</span>
+                <input type="file" required name="image" onChange={handleChange} />
+              </div>
+              <div>
+                <span>Audio:</span>
+                <input type="file" required name="audio" onChange={handleChange} />
+              </div>
             </form>
           ) : (
             <>
               <div>
-                Word:
-                <span>
-                  {wordText}
-                </span>
+                <span>Word:</span>
+                <br />
+                {wordText}
               </div>
               <div>
-                Translation:
-                <span>
-                  {translationText}
-                </span>
+                <span>Translation:</span>
+                <br />
+                {translationText}
               </div>
               <div>
-                Sound file:
-                <span>
-                  {audio.split('/').pop()}
-                </span>
+                <span>Audio:</span>
+                <br />
+                {audio ? audio.split('/').pop()?.substr(-10) : ''}
               </div>
-              <div>Image:</div>
-              <img src={image} alt="" />
+              <div>
+                <span>Image:</span>
+                <img className="word-card__img" src={image} alt="" />
+              </div>
             </>
           )
       }

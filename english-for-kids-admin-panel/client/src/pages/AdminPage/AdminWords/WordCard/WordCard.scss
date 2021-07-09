@@ -10,20 +10,19 @@
   list-style-type: none;
   margin: 10px;
   margin-bottom: 20px;
-  background-color: transparent;
-  outline: none;
+}
+
+.word-card > div {
+  margin-bottom: 10px;
 }
 
 .word-card__form > div {
   margin-bottom: 10px;
 }
 
-// .category-card__btns {
-//   width: 100%;
-//   display: flex;
-//   justify-content: space-between;
-//   margin-top: auto;
-// }
+.word-card span {
+  font-weight: bold;
+}
 
 .word-card__title {
   width: 100%;
@@ -32,45 +31,7 @@
   margin-bottom: 20px;
 }
 
-// .category-card__close {
-//   position: absolute;
-//   width: 40px;
-//   height: 40px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   top: 0;
-//   right: 0;
-//   cursor: pointer;
-//   background-color: transparent;
-//   border: none;
-//   outline: none;
-//   font-size: 25px;
-// }
-
-// .category-card__count_num {
-//   font-weight: bold;
-// }
-
-// .category-card__category-update {
-//   margin-top: 40px;
-// }
-
-// .category-card__label {
-//   display: block;
-//   margin-bottom: 10px;
-//   font-size: 15px;
-//   color: var(--simple-color);
-// }
-
-// .category-card__input {
-//   outline: none;
-//   border: none;
-//   border-bottom: 2px solid var(--simple-color);
-//   font-size: 18px;
-// }
-
-// .category-card__cancel > .admin-btn {
-//   border-color: var(--error-color);
-//   color: var(--error-color)
-// }
+.word-card__img {
+  width: 100%;
+  height: 152px;
+}

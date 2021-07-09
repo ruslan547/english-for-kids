@@ -35,6 +35,7 @@ export const createCard = async (
   const xhr = new XMLHttpRequest();
 
   xhr.open('POST', BASIC_URL + WORDS);
+  xhr.responseType = 'json';
   formData.append('category', category);
   xhr.send(formData);
 
@@ -51,6 +52,7 @@ export const updateCard = async (
   const xhr = new XMLHttpRequest();
 
   xhr.open('PATCH', BASIC_URL + WORDS);
+  xhr.responseType = 'json';
   formData.append('_id', _id);
   formData.append('category', category);
   xhr.send(formData);

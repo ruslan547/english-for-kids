@@ -13,17 +13,22 @@ export interface Category {
   __v: number;
 }
 
-export const getCategories = async (page: number, limit: number): Promise<Category[]> => {
+export const getCategories = async (
+  page: number,
+  limit: number,
+): Promise<{ categories: Category[], count: string }> => {
   const res = await fetch(`${BASIC_URL + CATEGORY}?page=${page}&limit=${limit}`);
-  const text = await res.text();
-  const json = `[${text.replaceAll('}', '},').slice(0, -1)}]`;
+  const count = res.headers.get('X-Total-Count') as string;
+  const categories = await res.json();
 
-  return JSON.parse(json);
+  return { categories, count };
 };
 
-export const createCategories = async () => {
+export const createCategory = async (title: string) => {
   const res = await fetch(BASIC_URL + CATEGORY, {
     method: 'POST',
+    headers: new Headers({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ title }),
   });
 
   const json = await res.json();
