@@ -27,7 +27,7 @@ function AdminWords(): JSX.Element {
   }) => (
     <WordCard
       key={_id}
-      id={_id}
+      id={_id as string}
       word={word}
       category={category}
       translation={translation}
@@ -60,7 +60,7 @@ function AdminWords(): JSX.Element {
   return (
     <ul className="admin-categories" ref={ul} onScroll={handleScroll}>
       {createCardList()}
-      <WordAdding setCards={setCards} />
+      <WordAdding category={id} setCards={setCards} />
     </ul>
   );
 }

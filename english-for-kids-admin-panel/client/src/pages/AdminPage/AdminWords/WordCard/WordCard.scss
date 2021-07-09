@@ -10,6 +10,12 @@
   list-style-type: none;
   margin: 10px;
   margin-bottom: 20px;
+  background-color: transparent;
+  outline: none;
+}
+
+.word-card__form > div {
+  margin-bottom: 10px;
 }
 
 // .category-card__btns {

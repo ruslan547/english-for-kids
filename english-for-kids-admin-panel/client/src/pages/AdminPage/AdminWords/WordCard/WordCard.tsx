@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import AdminBtn from '../../AdminBtn/AdminBtn';
 import contentConstants from '../../../../constants/contentConstants';
 import routesConstants from '../../../../constants/routesConstants';
-import { Card } from '../../../../services/wordsService';
+import { Card, deleteCard, updateCard } from '../../../../services/wordsService';
 
 const {
   ADMIN,
@@ -39,22 +39,30 @@ function WordCard({
   const [wordText, setWordText] = useState(word);
   const [translationText, setTranslationText] = useState(translation);
   const [loading, setLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleClick = async ({ target }: MouseEvent): Promise<void> => {
     const { name } = target as HTMLButtonElement;
 
     if (name === 'update') {
       firstWord.current = wordText;
+      firstTranslation.current = translationText;
       setUpdate((prevState) => !prevState);
     } else if (name === 'cancel') {
       setWordText(firstWord.current);
+      setTranslationText(firstTranslation.current);
       firstWord.current = '';
+      firstTranslation.current = '';
       setUpdate((prevState) => !prevState);
     } else if (name === 'create') {
       setLoading(true);
 
       try {
-        // await updateCategories(id, titleText);
+        if (formRef && formRef.current) {
+          console.log(formRef.current);
+          const data = await updateCard(formRef.current, category, id);
+          console.log(data);
+        }
       } catch (err) {
         setWordText(firstWord.current);
         console.log(err);
@@ -66,7 +74,7 @@ function WordCard({
       setLoading(true);
 
       try {
-        // await deleteCategory(id);
+        await deleteCard(id);
         setCards((prevState) => prevState.filter(({ _id }) => _id !== id));
       } catch (err) {
         console.log(err);
@@ -74,9 +82,6 @@ function WordCard({
 
       setLoading(false);
     }
-    //  else if (name === 'add') {
-    //   history.push(`${`${ADMIN + WORDS}/${id}`}`);
-    // }
   };
 
   const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>) => {
@@ -89,10 +94,13 @@ function WordCard({
 
   return (
     <li className="word-card">
+      <button className="category-card__close" disabled={loading} type="button" name="delete" onClick={handleClick}>
+        &times;
+      </button>
       {
         isUpdate
           ? (
-            <form action="">
+            <form ref={formRef} action="" onSubmit={() => false}>
               <input type="text" required name="category" value={category} onChange={handleChange} />
               <input type="text" required name="word" value={wordText} onChange={handleChange} />
               <input type="text" required name="translation" value={translationText} onChange={handleChange} />
@@ -136,9 +144,7 @@ function WordCard({
               </>
             )
             : (
-              <>
-                <AdminBtn name="update" content="Change" onClick={handleClick} />
-              </>
+              <AdminBtn name="update" content="Change" onClick={handleClick} />
             )
         }
       </div>

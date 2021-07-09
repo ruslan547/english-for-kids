@@ -7,7 +7,7 @@ const {
 } = pathsConstants;
 
 export interface Card {
-  _id: string;
+  _id?: string;
   word: string;
   translation: string;
   category: string;
@@ -18,35 +18,46 @@ export interface Card {
 
 export const getCards = async (page: number, limit: number, category: string): Promise<Card[]> => {
   const res = await fetch(`${BASIC_URL + WORDS}?page=${page}&limit=${limit}&category=${category}`);
-  const text = await res.text();
-  const json = `[${text.replaceAll('}', '},').slice(0, -1)}]`;
+  const cards = await res.json();
 
-  return JSON.parse(json);
+  if (res.ok) {
+    return cards;
+  }
+
+  throw new Error(cards.message);
 };
 
-// export const createCard = async () => {
-//   const res = await fetch(BASIC_URL + CATEGORY, {
-//     method: 'POST',
-//   });
+export const createCard = async (
+  form: HTMLFormElement,
+  category: string,
+) => new Promise((resolve, reject) => {
+  const formData = new FormData(form);
+  const xhr = new XMLHttpRequest();
 
-//   const json = await res.json();
+  xhr.open('POST', BASIC_URL + WORDS);
+  formData.append('category', category);
+  xhr.send(formData);
 
-//   return json;
-// };
+  xhr.onload = () => resolve(xhr.response);
+  xhr.onerror = (err) => reject(err);
+});
 
-// export const updateCard = async (_id: string, title: string) => {
-//   const res = await fetch(BASIC_URL + CATEGORY, {
-//     method: 'PATCH',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ _id, title }),
-//   });
+export const updateCard = async (
+  form: HTMLFormElement,
+  category: string,
+  _id: string,
+) => new Promise((resolve, reject) => {
+  const formData = new FormData(form);
+  const xhr = new XMLHttpRequest();
 
-//   const json = await res.json();
+  xhr.open('PATCH', BASIC_URL + WORDS);
+  formData.append('_id', _id);
+  formData.append('category', category);
+  xhr.send(formData);
 
-//   return json;
-// };
+  xhr.onload = () => resolve(xhr.response);
+  xhr.onerror = (err) => reject(err);
+});
 
 export const deleteCard = async (_id: string) => {
   const res = await fetch(BASIC_URL + WORDS, {
