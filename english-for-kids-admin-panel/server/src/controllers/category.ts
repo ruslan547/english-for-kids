@@ -10,7 +10,6 @@ export const getCategories = asyncHandler(async (req: Request, res: Response) =>
   const skip = limit * (req.query.page ? +req.query.page : 0);
   const cursor = Category.find({}, null, { limit, skip }).cursor();
   const count = await Category.count();
-  console.log(count);
   const body = [];
 
   res.header('X-Total-Count', count.toString());
