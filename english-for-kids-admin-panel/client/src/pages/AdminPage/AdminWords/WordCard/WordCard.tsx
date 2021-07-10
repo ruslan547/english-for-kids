@@ -78,9 +78,16 @@ function WordCard({
     } else if (name === 'delete') {
       setLoading(true);
 
-      await deleteCard(id);
-      setCards((prevState) => prevState.filter(({ _id }) => _id !== id));
-      setLoading(false);
+      try {
+        await deleteCard(id);
+        setCards((prevState) => prevState.filter(({ _id }) => _id !== id));
+      } catch {
+        setLoading(false);
+      }
+    } else if (name === 'play') {
+      const player = new Audio(audio);
+
+      player.play();
     }
   };
 
@@ -134,7 +141,8 @@ function WordCard({
               <div>
                 <span>Audio:</span>
                 <br />
-                {audio ? audio.split('/').pop()?.substr(-10) : ''}
+                {audio ? `${audio.split('/').pop()?.substr(-10)} ` : ''}
+                <AdminBtn name="play" content="play" onClick={handleClick} />
               </div>
               <div>
                 <span>Image:</span>

@@ -1,5 +1,4 @@
 import pathsConstants from '../constants/pathsConstants';
-import settingNumConstants from '../constants/settingNumConstants';
 
 const {
   BASIC_URL,
@@ -16,12 +15,16 @@ export interface Card {
   __v: number;
 }
 
-export const getCards = async (page: number, limit: number, category: string): Promise<Card[]> => {
+export const getCards = async (
+  page: number, limit: number,
+  category: string,
+): Promise<{ cards: Card[], count: string }> => {
   const res = await fetch(`${BASIC_URL + WORDS}?page=${page}&limit=${limit}&category=${category}`);
+  const count = res.headers.get('X-Total-Count') as string;
   const cards = await res.json();
 
   if (res.ok) {
-    return cards;
+    return { cards, count };
   }
 
   throw new Error(cards.message);

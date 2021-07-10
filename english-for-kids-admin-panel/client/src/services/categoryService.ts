@@ -24,6 +24,14 @@ export const getCategories = async (
   return { categories, count };
 };
 
+export const getAllCategories = async (): Promise<{ categories: Category[], count: string }> => {
+  const res = await fetch(`${BASIC_URL + CATEGORY}`);
+  const count = res.headers.get('X-Total-Count') as string;
+  const categories = await res.json();
+
+  return { categories, count };
+};
+
 export const createCategory = async (title: string) => {
   const res = await fetch(BASIC_URL + CATEGORY, {
     method: 'POST',

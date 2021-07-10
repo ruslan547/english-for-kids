@@ -56,9 +56,12 @@ function CategoryCard({
     } else if (name === 'delete') {
       setLoading(true);
 
-      await deleteCategory(id);
-      setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
-      setLoading(false);
+      try {
+        await deleteCategory(id);
+        setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
+      } catch {
+        setLoading(false);
+      }
     } else if (name === 'add') {
       history.push(`${`${ADMIN + WORDS}/${id}`}`);
     }

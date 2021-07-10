@@ -4,23 +4,29 @@ import { Card, getCards } from '../../../services/wordsService';
 import WordAdding from './WordAdding/WordAdding';
 import WordCard from './WordCard/WordCard';
 import settingNumConstants from '../../../constants/settingNumConstants';
-import routesConstants from '../../../constants/routesConstants';
 
-const {
-  PAGE_LIMIT,
-  PAGE_LIMIT_INIT,
-} = settingNumConstants;
+const { WORDS_PAGE_LIMIT } = settingNumConstants;
 
 function AdminWords(): JSX.Element {
   const { id } = useParams<{ [key: string]: string }>();
   const [cards, setCards] = useState<Card[]>([]);
-  const ul = useRef<HTMLUListElement>(null);
+  const ulRef = useRef<HTMLUListElement>(null);
   const [page, setPage] = useState(0);
+  const [count, setCount] = useState(0);
 
-  const addCards = async (num: number) => {
-    const data = await getCards(num, page ? PAGE_LIMIT : PAGE_LIMIT_INIT, id);
+  const initCards = async () => {
+    const data = await getCards(page, WORDS_PAGE_LIMIT, id);
 
-    setCards((prevState) => [...prevState, ...data]);
+    setCards(data.cards);
+    setCount(+data.count);
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const nextCards = async () => {
+    const data = await getCards(page, WORDS_PAGE_LIMIT, id);
+
+    setCards((prevState) => [...prevState, ...data.cards]);
+    setPage((prevPage) => prevPage + 1);
   };
 
   const createCardList = () => cards.map(({
@@ -38,28 +44,23 @@ function AdminWords(): JSX.Element {
     />
   ));
 
-  const nextPage = (): void => {
-    if (ul && ul.current) {
-      if (ul.current.scrollTop + ul.current.clientHeight >= ul.current.scrollHeight) {
-        setPage((prevPage) => prevPage + 1);
-      }
+  const handleScroll = () => {
+    if (
+      cards.length < count
+      && ulRef
+      && ulRef.current
+      && ulRef.current.scrollTop + ulRef.current.clientHeight >= ulRef.current.scrollHeight
+    ) {
+      nextCards();
     }
   };
 
-  const handleScroll = () => {
-    nextPage();
-  };
-
   useEffect(() => {
-    addCards(page);
-  }, [page]);
-
-  useEffect(() => {
-    nextPage();
-  });
+    initCards();
+  }, []);
 
   return (
-    <ul className="admin-categories" ref={ul} onScroll={handleScroll}>
+    <ul className="admin-categories" ref={ulRef} onScroll={handleScroll}>
       {createCardList()}
       <WordAdding category={id} setCards={setCards} />
     </ul>

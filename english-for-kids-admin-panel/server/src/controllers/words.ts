@@ -82,7 +82,7 @@ export const getCards = asyncHandler(async (req: Request, res: Response) => {
   const body = [];
 
   const cursor = Card.find({ category }, null, { limit, skip }).cursor();
-  const count = await Card.count();
+  const count = await Card.find({ category }).count();
 
   res.header('X-Total-Count', count.toString());
   res.header('Access-Control-Expose-Headers', `X-Total-Count${skip ? ', Link' : ''}`);
