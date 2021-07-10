@@ -4,10 +4,9 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import contentConstants from '../../../constants/contentConstants';
 import sortConstants from '../../../constants/sortConstants';
-import { Card } from '../../../db/cards';
 import { sort } from '../../../services/sortService';
 import { getCalculatedDate, Statistic } from '../../../services/statisticsService';
-import { getAllCards, getCards } from '../../../services/wordsService';
+import { Card, getAllCards, getCards } from '../../../services/wordsService';
 import { setAllCards, setCards } from '../../CategoryPage/categoryPageSlice';
 import './StatisticsTable.scss';
 import TableSection from './TableSection/TableSection';

@@ -1,7 +1,6 @@
 import {
   ChangeEvent, Dispatch, MouseEvent, SetStateAction, useState,
 } from 'react';
-import { categories } from '../../../../db/cards';
 import { Category, createCategory } from '../../../../services/categoryService';
 import AdminBtn from '../../AdminBtn/AdminBtn';
 import './CategoryAdding.scss';

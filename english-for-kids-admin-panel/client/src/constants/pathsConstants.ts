@@ -3,7 +3,7 @@ export default Object.freeze({
   CORRECT_SOUND: 'audio/correct.mp3',
   ASSETS_DIR: '/assets',
   CATEGORY_PARAM: '/:id',
-  BASIC_URL: '',
+  BASIC_URL: '/server',
   LOGIN: '/login',
   CATEGORY: '/category',
   WORDS: '/words',
