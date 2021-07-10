@@ -10,6 +10,7 @@ export interface Category {
   _id: string;
   title: string;
   words: number;
+  image: string;
   __v: number;
 }
 

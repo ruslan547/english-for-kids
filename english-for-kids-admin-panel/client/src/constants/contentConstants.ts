@@ -4,7 +4,7 @@ export default Object.freeze({
   MAIN: 'Main',
   STATISTICS: 'Statistics',
   NOT_FOUND: '404 Not found',
-  NOT_DIFFICULT_WORDS: 'There are no difficult words',
+  NOT_DIFFICULT_WORDS: 'There are no words',
   START_GAME: 'Start game',
   CATEGORY: 'Category',
   WORD: 'Word',

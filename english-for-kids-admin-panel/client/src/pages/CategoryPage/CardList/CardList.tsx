@@ -1,55 +1,67 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import contentConstants from '../../../constants/contentConstants';
 import settingNumConstants from '../../../constants/settingNumConstants';
-import { cards, categories } from '../../../db/cards';
-import { getCalculatedDate } from '../../../services/statisticsService';
+import { Category } from '../../../services/categoryService';
+import { CalculatedDate, getCalculatedDate } from '../../../services/statisticsService';
+import { Card, getAllCards, getCards } from '../../../services/wordsService';
 import CardElem from '../CardElem/CardElem';
-import { setDifficultWords } from '../categoryPageSlice';
+import { setAllCards, setCards, setDifficultWords } from '../categoryPageSlice';
 import './CardList.scss';
 
 const { INDEX_OF_CATEGORY_PATH, INDEX_OF_CATEGORY_TITLE, MENU_ITEM_NUM } = settingNumConstants;
 
 function CardList(): JSX.Element {
   const dispatch = useAppDispatch();
+  const { cards, categories, allCards } = useAppSelector((state) => state.categoryPage);
   const listRef = useRef<HTMLUListElement | null>(null);
   const { id } = useParams<{ id: string }>();
 
-  const curCategory = categories.find((item) => item[INDEX_OF_CATEGORY_PATH].includes(`/${id}`));
-  const categoryTitle = curCategory
-    ? curCategory[INDEX_OF_CATEGORY_TITLE]
-    : contentConstants.DIFFICULT_WORDS;
+  const initCards = async () => {
+    const data = await getCards(0, 0, id);
+    const allData = await getAllCards();
 
+    dispatch(setCards(data.cards));
+    dispatch(setAllCards(allData.cards));
+  };
+
+  let categoryTitle;
   let list;
 
   if (id) {
-    const listIndex = categories.map((item) => item[INDEX_OF_CATEGORY_PATH]).indexOf(`/${id}`);
-    list = cards[listIndex].map((item) => (
+    list = cards.map((item: Card) => (
       <CardElem
-        key={item.word}
+        key={item._id}
         card={item}
         listRef={listRef}
       />
     ));
+
+    categoryTitle = (categories as Category[]).find(({ _id }) => _id === id)?.title;
   } else {
-    const statistics = getCalculatedDate();
+    const statistics: CalculatedDate[] = getCalculatedDate(allCards, categories);
 
     const difficultCards = statistics
-      .sort((a, b) => b.statistic.error - a.statistic.error)
-      .filter(({ statistic: { error } }, index) => error && index < MENU_ITEM_NUM)
+      .filter(({ statistic: { error } }) => error)
       .map(({ card }) => card);
 
     list = difficultCards.map((card) => (
       <CardElem
-        key={card.word}
+        key={card._id}
         card={card}
         listRef={listRef}
       />
     ));
 
-    dispatch(setDifficultWords(difficultCards));
+    categoryTitle = contentConstants.DIFFICULT_WORDS;
+
+    // dispatch(setDifficultWords(difficultCards));
   }
+
+  useEffect(() => {
+    initCards();
+  }, [id]);
 
   return (
     <>

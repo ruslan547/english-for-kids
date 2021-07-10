@@ -68,7 +68,7 @@ export const createCard = asyncHandler(async (req: Request, res: Response): Prom
 
   await Category.findByIdAndUpdate(
     category,
-    { words: words + 1 },
+    { words: words + 1, image },
     { new: true },
   );
 
@@ -81,8 +81,16 @@ export const getCards = asyncHandler(async (req: Request, res: Response) => {
   const category = req.query.category as string;
   const body = [];
 
-  const cursor = Card.find({ category }, null, { limit, skip }).cursor();
-  const count = await Card.find({ category }).count();
+  let cursor;
+  let count;
+
+  if (category) {
+    cursor = Card.find({ category }, null, { limit, skip }).cursor();
+    count = await Card.find({ category }).count();
+  } else {
+    cursor = Card.find({}, null, { limit, skip }).cursor();
+    count = await Card.find().count();
+  }
 
   res.header('X-Total-Count', count.toString());
   res.header('Access-Control-Expose-Headers', `X-Total-Count${skip ? ', Link' : ''}`);

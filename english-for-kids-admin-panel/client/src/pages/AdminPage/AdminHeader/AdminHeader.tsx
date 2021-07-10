@@ -3,13 +3,17 @@ import { useRouteMatch, NavLink, useHistory } from 'react-router-dom';
 import contentConstants from '../../../constants/contentConstants';
 import routesConstants from '../../../constants/routesConstants';
 import { deleteCookie } from '../../../services/cookiesService';
+import { useAppDispatch } from '../../../app/hooks';
+import { setLogin } from '../../../components/Header/HamburgerMenu/hamburgerMenu';
 
 function AdminHeader(): JSX.Element {
+  const dispatch = useAppDispatch();
   const { url } = useRouteMatch();
   const history = useHistory();
 
   const handleClick = (): void => {
     deleteCookie('sessionid');
+    dispatch(setLogin(false));
     history.push(routesConstants.MAIN);
   };
 

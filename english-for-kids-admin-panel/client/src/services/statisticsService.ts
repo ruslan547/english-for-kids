@@ -1,6 +1,7 @@
 import settingConstants from '../constants/settingConstants';
 import settingNumConstants from '../constants/settingNumConstants';
-import { Card, cards, categories } from '../db/cards';
+import { Category } from './categoryService';
+import { Card } from './wordsService';
 
 const { LOCAL_STORAGE_KEY } = settingConstants;
 
@@ -37,28 +38,38 @@ export const resetStatistics = (): void => {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({}));
 };
 
-export const getCalculatedDate = () => cards.reduce((ac, item, index) => {
+export const getCalculatedDate = (
+  allCards: Card[],
+  categories: Category[],
+) => allCards.reduce((ac, card) => {
   const statistics = getStatisticsFromLocalStore();
+  const category = categories.find(({ _id }) => _id === card.category)?.title as string;
 
-  item.forEach((card) => {
-    const category = categories[index][INDEX_OF_CATEGORY_TITLE];
-    const statistic = statistics[card.word]
-      ? statistics[card.word]
-      : { train: 0, play: 0, error: 0 };
-    const { play, error } = statistic;
-    const prePercent = ((play * 100) / (play + error));
-    const percent = prePercent ? Math.round(prePercent) : 0;
+  const statistic = statistics[card.word]
+    ? statistics[card.word]
+    : { train: 0, play: 0, error: 0 };
+  const { play, error } = statistic;
+  const prePercent = ((play * 100) / (play + error));
+  const percent = prePercent ? Math.round(prePercent) : 0;
 
-    ac.push({
-      card,
-      category,
-      statistic,
-      percent,
-    });
+  ac.push({
+    card,
+    category,
+    statistic,
+    percent,
   });
 
   return ac;
 }, [] as CalculatedDate[]);
+
+export const isDifficultWords = (
+  allCards: Card[],
+  categories: Category[],
+) => {
+  const statistics: CalculatedDate[] = getCalculatedDate(allCards, categories);
+
+  return statistics.find(({ statistic: { error } }) => error);
+};
 
 export const initWord = (statistics: Statistics, word: string): void => {
   if (statistics[word] === undefined) {

@@ -26,7 +26,8 @@ export const getCategories = asyncHandler(async (req: Request, res: Response) =>
 
 export const createCategory = asyncHandler(async (req: Request, res: Response) => {
   const { title } = req.body;
-  const category = new Category({ title, words: 0 });
+  const image = pathsConstants.IMG_FILLER;
+  const category = new Category({ title, words: 0, image });
 
   await category.save();
   res.status(201).json(category);

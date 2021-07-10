@@ -1,5 +1,5 @@
-import { Card } from '../../../../db/cards';
 import { Statistic } from '../../../../services/statisticsService';
+import { Card } from '../../../../services/wordsService';
 
 export interface TableSectionProps {
   card: Card;

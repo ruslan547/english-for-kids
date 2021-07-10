@@ -13,7 +13,7 @@ function FinishPage(): JSX.Element {
   const { errNum } = useAppSelector((state) => state.scoreBoard);
 
   useEffect(() => {
-    playAudio(`audio/${errNum ? 'failure' : 'success'}.mp3`);
+    playAudio(`${pathsConstants.ASSETS_DIR}/audio/${errNum ? 'failure' : 'success'}.mp3`);
     setTimeout(() => {
       history.push(routesConstants.MAIN);
       dispatch(setErrNum(0));

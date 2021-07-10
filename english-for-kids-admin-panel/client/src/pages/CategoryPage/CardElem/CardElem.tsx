@@ -7,12 +7,12 @@ import Repeat from '../../../components/Repeat/Repeat';
 import pathsConstants from '../../../constants/pathsConstants';
 import routesConstants from '../../../constants/routesConstants';
 import stateConstants from '../../../constants/stateConstants';
-import { Card } from '../../../db/cards';
 import { incrementError, incrementPlay, incrementTrain } from '../../../services/statisticsService';
 import { playAudio } from '../../../services/audioService';
 import { addGoal, addMiss, setErrNum } from '../ScoreBoard/scoreBoardSlice';
 import { popWord, setCurrentWord, stopGame } from '../StartBtn/startBtnSlice';
 import './CardElem.scss';
+import { Card } from '../../../services/wordsService';
 
 const { ASSETS_DIR, CORRECT_SOUND, ERROR_SOUND } = pathsConstants;
 
@@ -23,7 +23,10 @@ export interface CardElemProps {
 
 function CardElem({
   card: {
-    word, translation, image, audioSrc,
+    word,
+    translation,
+    image,
+    audio,
   },
   listRef,
 }: CardElemProps): JSX.Element {
@@ -39,7 +42,7 @@ function CardElem({
   const isPlay = appState === stateConstants.PLAY;
 
   const style = {
-    backgroundImage: `url(${ASSETS_DIR}/${image})`,
+    backgroundImage: `url(${image})`,
     opacity: completed ? '.5' : '1',
   };
 
@@ -58,11 +61,11 @@ function CardElem({
 
   const handleCardClick = (): void => {
     if (cardClass === 'card' && !isPlay) {
-      playAudio(audioSrc);
+      playAudio(audio);
       incrementTrain(word);
     } else if (!completed && isPlay && isGame) {
-      if (currentWord === audioSrc) {
-        playAudio(CORRECT_SOUND);
+      if (currentWord === audio) {
+        playAudio(`/assets/${CORRECT_SOUND}`);
         dispatch(addGoal());
         setCompleted(true);
         incrementPlay(word);
@@ -83,7 +86,7 @@ function CardElem({
           }, 1000);
         }
       } else {
-        playAudio(ERROR_SOUND);
+        playAudio(`/assets/${ERROR_SOUND}`);
         dispatch(addMiss());
         incrementError(word);
       }

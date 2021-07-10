@@ -30,6 +30,18 @@ export const getCards = async (
   throw new Error(cards.message);
 };
 
+export const getAllCards = async (): Promise<{ cards: Card[], count: string }> => {
+  const res = await fetch(`${BASIC_URL + WORDS}`);
+  const count = res.headers.get('X-Total-Count') as string;
+  const cards = await res.json();
+
+  if (res.ok) {
+    return { cards, count };
+  }
+
+  throw new Error(cards.message);
+};
+
 export const createCard = async (
   form: HTMLFormElement,
   category: string,

@@ -1,11 +1,14 @@
 import {
-  JSXElementConstructor, MouseEvent, ReactElement, useState,
+  JSXElementConstructor, MouseEvent, ReactElement, useState, useEffect,
 } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import contentConstants from '../../../constants/contentConstants';
 import sortConstants from '../../../constants/sortConstants';
 import { Card } from '../../../db/cards';
 import { sort } from '../../../services/sortService';
 import { getCalculatedDate, Statistic } from '../../../services/statisticsService';
+import { getAllCards, getCards } from '../../../services/wordsService';
+import { setAllCards, setCards } from '../../CategoryPage/categoryPageSlice';
 import './StatisticsTable.scss';
 import TableSection from './TableSection/TableSection';
 
@@ -26,9 +29,17 @@ interface TableSectionProps {
 }
 
 function StatisticsTable(): JSX.Element {
+  const dispatch = useAppDispatch();
   const [sortBy, setSortBy] = useState(CATEGORY);
   const [orderBy, setOrderBy] = useState('asc');
-  const dataForSections = getCalculatedDate();
+  const { allCards, categories } = useAppSelector((state) => state.categoryPage);
+  const dataForSections = getCalculatedDate(allCards, categories);
+
+  const initCards = async () => {
+    const allData = await getAllCards();
+
+    dispatch(setAllCards(allData.cards));
+  };
 
   sort(dataForSections, sortBy);
 
@@ -62,6 +73,10 @@ function StatisticsTable(): JSX.Element {
       setSortBy(name);
     }
   };
+
+  useEffect(() => {
+    initCards();
+  }, []);
 
   return (
     <table>

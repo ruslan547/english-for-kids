@@ -1,11 +1,11 @@
 import pathsConstants from '../constants/pathsConstants';
 import settingNumConstants from '../constants/settingNumConstants';
-import { Card, cards, categories } from '../db/cards';
+import { Card } from './wordsService';
 
 const { INDEX_OF_CATEGORY_PATH } = settingNumConstants;
 
 export const playAudio = (audioSrc: string): void => {
-  new Audio(`${pathsConstants.ASSETS_DIR}/${audioSrc}`).play();
+  new Audio(audioSrc).play();
 };
 
 const shuffle = (array: string[]) => {
@@ -15,19 +15,18 @@ const shuffle = (array: string[]) => {
   }
 };
 
-export const getAudioSrcs = (id: string): string[] => {
-  const listIndex = categories.map((item) => item[INDEX_OF_CATEGORY_PATH]).indexOf(`/${id}`);
-  const srcs = cards[listIndex].map(({ audioSrc }) => audioSrc);
+export const getAudios = (id: string, cards: Card[]): string[] => {
+  const audios = cards.map(({ audio }) => audio);
 
-  shuffle(srcs);
+  shuffle(audios);
 
-  return srcs;
+  return audios;
 };
 
 export const getAudioFromDifficultCards = (arr: Card[]) => {
-  const srcs = arr.map(({ audioSrc }) => audioSrc);
+  const audios = arr.map(({ audio }) => audio);
 
-  shuffle(srcs);
+  shuffle(audios);
 
-  return srcs;
+  return audios;
 };

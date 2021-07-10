@@ -1,9 +1,11 @@
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useAppDispatch } from '../../app/hooks';
 import contentConstants from '../../constants/contentConstants';
 import routesConstants from '../../constants/routesConstants';
 import { login } from '../../services/authService';
 import { setCookie } from '../../services/cookiesService';
+import { setLogin } from '../Header/HamburgerMenu/hamburgerMenu';
 import './LoginForm.scss';
 
 interface LoginFormProps {
@@ -17,6 +19,7 @@ function LoginForm({
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const handleClick = async ({ target }: MouseEvent<HTMLButtonElement>): Promise<void> => {
     (target as HTMLButtonElement).disabled = true;
@@ -25,6 +28,7 @@ function LoginForm({
     try {
       const data = await login(username, password);
       setCookie('sessionid', data.token);
+      dispatch(setLogin(true));
       onClose();
       setTimeout(() => history.push(routesConstants.ADMIN), 0);
     } catch (err) {

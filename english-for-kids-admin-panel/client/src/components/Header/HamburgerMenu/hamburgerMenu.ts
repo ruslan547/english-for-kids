@@ -5,6 +5,7 @@ export const hamburgerMenuSlice = createSlice({
   initialState: {
     isMenu: false,
     isModal: false,
+    isLogin: false,
   },
   reducers: {
     openMenu: (state) => {
@@ -19,11 +20,14 @@ export const hamburgerMenuSlice = createSlice({
     closeModal: (state) => {
       state.isModal = false;
     },
+    setLogin: (state, action) => {
+      state.isLogin = action.payload;
+    },
   },
 });
 
 export const {
-  openMenu, closeMenu, openModal, closeModal,
+  openMenu, closeMenu, openModal, closeModal, setLogin,
 } = hamburgerMenuSlice.actions;
 
 export default hamburgerMenuSlice.reducer;

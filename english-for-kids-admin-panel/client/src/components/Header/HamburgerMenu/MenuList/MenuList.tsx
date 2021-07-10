@@ -1,15 +1,15 @@
 import './MenuList.scss';
 import { Link, useParams } from 'react-router-dom';
-import { MouseEvent } from 'react';
+import { MouseEvent, useState, useEffect } from 'react';
 import routesConstants from '../../../../constants/routesConstants';
-import { categories } from '../../../../db/cards';
-import { useAppDispatch } from '../../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import { closeMenu, openModal } from '../hamburgerMenu';
 import { setCurrentWord, setWords, stopGame } from '../../../../pages/CategoryPage/StartBtn/startBtnSlice';
 import { setErrNum, setScore } from '../../../../pages/CategoryPage/ScoreBoard/scoreBoardSlice';
 import settingNumConstants from '../../../../constants/settingNumConstants';
 import contentConstants from '../../../../constants/contentConstants';
 import { getCookie } from '../../../../services/cookiesService';
+import { Category, getAllCategories } from '../../../../services/categoryService';
 
 const {
   MAIN,
@@ -27,6 +27,14 @@ function MenuList(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const curRoute = `/${id ?? window.location.href.split('/').pop()}`;
   const dispatch = useAppDispatch();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const { isLogin } = useAppSelector((state) => state.hamburgerMenu);
+
+  const initCategories = async () => {
+    const data = await getAllCategories();
+
+    setCategories(data.categories);
+  };
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>): void => {
     if ((event.target as HTMLButtonElement).name === 'login') {
@@ -41,22 +49,26 @@ function MenuList(): JSX.Element {
     dispatch(closeMenu());
   };
 
-  const list = categories.map((item) => {
-    const isActive = curRoute === item[INDEX_OF_CATEGORY_PATH];
+  const list = categories.map(({ title, _id }) => {
+    const isActive = curRoute === _id;
     const categoryClass = `menu__item ${isActive ? 'menu__item_active' : ''}`;
 
     return (
-      <li key={item[INDEX_OF_CATEGORY_PATH]}>
+      <li key={_id}>
         <Link
           className={categoryClass}
-          to={`${CATEGORY}${item[INDEX_OF_CATEGORY_PATH]}`}
+          to={`${CATEGORY}/${_id}`}
           onClick={handleClick}
         >
-          {item[INDEX_OF_CATEGORY_TITLE]}
+          {title}
         </Link>
       </li>
     );
   });
+
+  useEffect(() => {
+    initCategories();
+  }, []);
 
   return (
     <ul className="menu__list">
@@ -81,7 +93,7 @@ function MenuList(): JSX.Element {
       </li>
       <li className="menu__last-item">
         {
-          getCookie('sessionid')
+          isLogin
             ? <Link className="menu__item" to={ADMIN}>Admin</Link>
             : (
               <button

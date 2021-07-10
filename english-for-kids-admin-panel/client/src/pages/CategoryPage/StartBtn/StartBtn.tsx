@@ -3,20 +3,23 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import './StartBtn.scss';
 import stateConstants from '../../../constants/stateConstants';
 import { setCurrentWord, setWords, startGame } from './startBtnSlice';
-import { getAudioSrcs, getAudioFromDifficultCards } from '../../../services/audioService';
+import { getAudios, getAudioFromDifficultCards } from '../../../services/audioService';
 import pathsConstants from '../../../constants/pathsConstants';
 import contentConstants from '../../../constants/contentConstants';
+import { CalculatedDate, getCalculatedDate, isDifficultWords } from '../../../services/statisticsService';
 
 function StartBtn(): JSX.Element {
   const dispatch = useAppDispatch();
+  const { allCards, categories } = useAppSelector((state) => state.categoryPage);
   const { isGame, currentWord } = useAppSelector((state) => state.startBtn);
   const { appState } = useAppSelector((state) => state.toggleSwitch);
-  const { difficultWords } = useAppSelector((state) => state.categoryPage);
+  const { difficultWords, cards } = useAppSelector((state) => state.categoryPage);
   const { id } = useParams<{ id: string }>();
-  const isDisabled = appState === stateConstants.TRAIN || (!id && !difficultWords.length);
+  const isDisabled = appState === stateConstants.TRAIN
+    || (!id && !isDifficultWords(allCards, categories));
 
   const playAudio = (audio: string): void => {
-    new Audio(`${pathsConstants.ASSETS_DIR}/${audio}`).play();
+    new Audio(audio).play();
   };
 
   const handleClick = (): void => {
@@ -24,9 +27,13 @@ function StartBtn(): JSX.Element {
       let words;
 
       if (id) {
-        words = getAudioSrcs(id);
+        words = getAudios(id, cards);
       } else {
-        words = getAudioFromDifficultCards(difficultWords);
+        const statistics: CalculatedDate[] = getCalculatedDate(allCards, categories);
+
+        words = statistics
+          .filter(({ statistic: { error } }) => error)
+          .map(({ card: { audio } }) => audio);
       }
 
       const curWord = words.pop() as string;
