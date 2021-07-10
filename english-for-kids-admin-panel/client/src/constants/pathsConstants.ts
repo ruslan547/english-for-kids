@@ -3,7 +3,7 @@ export default Object.freeze({
   CORRECT_SOUND: 'audio/correct.mp3',
   ASSETS_DIR: '/assets',
   CATEGORY_PARAM: '/:id',
-  BASIC_URL: '/server',
+  BASIC_URL: 'https://peaceful-cliffs-83188.herokuapp.com',
   LOGIN: '/login',
   CATEGORY: '/category',
   WORDS: '/words',

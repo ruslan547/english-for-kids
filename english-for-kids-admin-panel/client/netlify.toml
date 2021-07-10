@@ -1,6 +1,6 @@
 [[redirects]]
-  from = "/server"
-  to = "https://peaceful-cliffs-83188.herokuapp.com/"
+  from = "https://peaceful-cliffs-83188.herokuapp.com"
+  to = "https://peaceful-cliffs-83188.herokuapp.com"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
