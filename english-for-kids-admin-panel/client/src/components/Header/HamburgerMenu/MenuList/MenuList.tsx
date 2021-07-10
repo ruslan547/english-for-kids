@@ -50,7 +50,7 @@ function MenuList(): JSX.Element {
   };
 
   const list = categories.map(({ title, _id }) => {
-    const isActive = curRoute === _id;
+    const isActive = curRoute === `/${_id}`;
     const categoryClass = `menu__item ${isActive ? 'menu__item_active' : ''}`;
 
     return (
