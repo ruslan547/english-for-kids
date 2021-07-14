@@ -14,7 +14,6 @@ export const getCategories = asyncHandler(async (req: Request, res: Response) =>
 
   res.header('X-Total-Count', count.toString());
   res.header('Access-Control-Expose-Headers', `X-Total-Count${skip ? ', Link' : ''}`);
-  res.status(200);
 
   for await (const category of cursor) {
     body.push(category);

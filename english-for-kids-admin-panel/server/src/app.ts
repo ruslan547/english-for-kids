@@ -5,6 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import createError from 'http-errors';
 import multer from 'multer';
+import swaggerUi from 'swagger-ui-express';
 import indexRouter from './routes';
 import routesConstants from './constants/routes';
 import loginRouter from './routes/login';
@@ -13,6 +14,7 @@ import { validateAuthParam } from './middleware/validate';
 import logoutRouter from './routes/logout';
 import categoryRouter from './routes/category';
 import wordsRouter from './routes/words';
+import openApiDocumentation from './openApiDocumentation.json';
 
 const app = express();
 const loader = multer({ dest: path.join(__dirname, 'tmp') });
@@ -20,12 +22,12 @@ const loader = multer({ dest: path.join(__dirname, 'tmp') });
 app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 app.use(routesConstants.REGISTRATION, validateAuthParam, registrationRouter);
 app.use(routesConstants.LOGIN, validateAuthParam, loginRouter);
 app.use(routesConstants.LOGOUT, logoutRouter);
 app.use(routesConstants.CATEGORY, categoryRouter);
-// app.use(routesConstants.WORDS, loader.single('avatar'), wordsRouter);
 app.use(routesConstants.WORDS, loader.fields([{
   name: 'image', maxCount: 1,
 }, {

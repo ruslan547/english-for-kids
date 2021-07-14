@@ -1,0 +1,345 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "efk",
+    "description": "'efk API",
+    "contact": {
+      "name": "Ruslan Novik",
+      "email": "novik.rv93@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000/",
+      "description": "Local server"
+    },
+    {
+      "url": "http://api_url_production",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "CRUD operations"
+    }
+  ],
+  "paths": {
+    "/category": {
+      "get": {
+        "description": "Get all categories",
+        "responses": {
+          "200": {
+            "description": "Categories were obtained",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create category",
+        "responses": {
+          "201": {
+            "description": "Category was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update category",
+        "responses": {
+          "200": {
+            "description": "Category was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete category",
+        "responses": {
+          "200": {
+            "description": "Category was deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/words": {
+      "get": {
+        "description": "Get all word cards",
+        "responses": {
+          "200": {
+            "description": "Cards were obtained",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Card"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create card",
+        "responses": {
+          "201": {
+            "description": "Card was created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Card"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update card",
+        "responses": {
+          "200": {
+            "description": "Card was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete card",
+        "responses": {
+          "200": {
+            "description": "Card was deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "description": "Login",
+        "responses": {
+          "200": {
+            "description": "User was logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "status": 400,
+                  "message": "Invalid username or password",
+                  "stack": "any stack"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "description": "Logout",
+        "responses": {
+          "200": {
+            "description": "User was logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                },
+                "example": {
+                  "message": "logged out"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "description": "Register",
+        "responses": {
+          "201": {
+            "description": "User was registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                },
+                "example": {
+                  "message": "User added"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "status": 400,
+                  "message": "There is already such a user",
+                  "stack": "any stack"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "updateMessage": {
+        "type": "string",
+        "example": "Updated"
+      },
+      "deletedMessage": {
+        "type": "string",
+        "example": "Deleted"
+      },
+      "Category": {
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "words": {
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "Card": {
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "word": {
+            "type": "string"
+          },
+          "translation": {
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          },
+          "audio": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateMessage": {
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/updateMessage"
+          }
+        }
+      },
+      "DeletedMessage": {
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/deletedMessage"
+          }
+        }
+      },
+      "Token": {
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "uid": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "stack": {
+            "type": "string"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
