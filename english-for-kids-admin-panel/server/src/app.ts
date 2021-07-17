@@ -15,6 +15,7 @@ import logoutRouter from './routes/logout';
 import categoryRouter from './routes/category';
 import wordsRouter from './routes/words';
 import openApiDocumentation from './openApiDocumentation.json';
+import auth from './middleware/auth';
 
 const app = express();
 const loader = multer({ dest: path.join(__dirname, 'tmp') });
@@ -27,8 +28,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 app.use(routesConstants.REGISTRATION, validateAuthParam, registrationRouter);
 app.use(routesConstants.LOGIN, validateAuthParam, loginRouter);
 app.use(routesConstants.LOGOUT, logoutRouter);
-app.use(routesConstants.CATEGORY, categoryRouter);
-app.use(routesConstants.WORDS, loader.fields([{
+app.use(routesConstants.CATEGORY, auth, categoryRouter);
+app.use(routesConstants.WORDS, auth, loader.fields([{
   name: 'image', maxCount: 1,
 }, {
   name: 'audio', maxCount: 1,
