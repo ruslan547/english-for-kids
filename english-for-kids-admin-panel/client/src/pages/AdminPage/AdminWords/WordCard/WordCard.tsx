@@ -7,6 +7,8 @@ import AdminBtn from '../../AdminBtn/AdminBtn';
 import contentConstants from '../../../../constants/contentConstants';
 import routesConstants from '../../../../constants/routesConstants';
 import { Card, deleteCard, updateCard } from '../../../../services/wordsService';
+import { useAppDispatch } from '../../../../app/hooks';
+import { setLogin } from '../../../../components/Header/HamburgerMenu/hamburgerMenu';
 
 const {
   ADMIN,
@@ -40,6 +42,7 @@ function WordCard({
   const [translationText, setTranslationText] = useState(translation);
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const dispatch = useAppDispatch();
 
   const handleClick = async ({ target }: MouseEvent): Promise<void> => {
     const { name } = target as HTMLButtonElement;
@@ -71,6 +74,7 @@ function WordCard({
       } catch (err) {
         setWordText(firstWord.current);
         setTranslationText(firstTranslation.current);
+        dispatch(setLogin(false));
       }
 
       setUpdate(false);
@@ -82,7 +86,7 @@ function WordCard({
         await deleteCard(id);
         setCards((prevState) => prevState.filter(({ _id }) => _id !== id));
       } catch {
-        setLoading(false);
+        dispatch(setLogin(false));
       }
     } else if (name === 'play') {
       const player = new Audio(audio);

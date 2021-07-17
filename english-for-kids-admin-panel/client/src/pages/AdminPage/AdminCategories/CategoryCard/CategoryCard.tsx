@@ -7,6 +7,8 @@ import AdminBtn from '../../AdminBtn/AdminBtn';
 import contentConstants from '../../../../constants/contentConstants';
 import { Category, deleteCategory, updateCategories } from '../../../../services/categoryService';
 import routesConstants from '../../../../constants/routesConstants';
+import { setLogin } from '../../../../components/Header/HamburgerMenu/hamburgerMenu';
+import { useAppDispatch } from '../../../../app/hooks';
 
 const {
   ADMIN,
@@ -28,6 +30,7 @@ function CategoryCard({
 }: CategoryCardProps): JSX.Element {
   const firstTitle = useRef('');
   const history = useHistory();
+  const dispatch = useAppDispatch();
   const [isUpdate, setUpdate] = useState(false);
   const [titleText, setTitleText] = useState(title);
   const [loading, setLoading] = useState(false);
@@ -49,6 +52,7 @@ function CategoryCard({
         await updateCategories(id, titleText);
       } catch (err) {
         setTitleText(firstTitle.current);
+        dispatch(setLogin(false));
       }
 
       setUpdate(false);
@@ -60,7 +64,7 @@ function CategoryCard({
         await deleteCategory(id);
         setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
       } catch (err) {
-        setLoading(false);
+        dispatch(setLogin(false));
       }
     } else if (name === 'add') {
       history.push(`${`${ADMIN + WORDS}/${id}`}`);

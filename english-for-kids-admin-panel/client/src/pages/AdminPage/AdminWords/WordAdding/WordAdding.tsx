@@ -1,10 +1,14 @@
 import {
   ChangeEvent, Dispatch, MouseEvent, SetStateAction, useRef, useState,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Card, createCard } from '../../../../services/wordsService';
 import AdminBtn from '../../AdminBtn/AdminBtn';
 import pathsConstants from '../../../../constants/pathsConstants';
 import './WordAdding.scss';
+import routesConstants from '../../../../constants/routesConstants';
+import { useAppDispatch } from '../../../../app/hooks';
+import { setLogin } from '../../../../components/Header/HamburgerMenu/hamburgerMenu';
 
 const {
   BASIC_URL,
@@ -22,6 +26,8 @@ function WordAdding({ category, setCards }: WordAddingProps): JSX.Element {
   const [wordText, setWordText] = useState('');
   const [translationText, setTranslationText] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
+  const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const handleClick = async (event: MouseEvent<HTMLElement>) => {
     const { name, tagName } = event.target as HTMLButtonElement;
@@ -34,7 +40,7 @@ function WordAdding({ category, setCards }: WordAddingProps): JSX.Element {
         const data = await createCard(formRef.current, category);
         setCards((prevCards) => [...prevCards, data as Card]);
       } catch {
-        setLoading(false);
+        dispatch(setLogin(false));
       }
 
       setWordText('');

@@ -1,6 +1,8 @@
 import {
   ChangeEvent, Dispatch, MouseEvent, SetStateAction, useState,
 } from 'react';
+import { useAppDispatch } from '../../../../app/hooks';
+import { setLogin } from '../../../../components/Header/HamburgerMenu/hamburgerMenu';
 import { Category, createCategory } from '../../../../services/categoryService';
 import AdminBtn from '../../AdminBtn/AdminBtn';
 import './CategoryAdding.scss';
@@ -13,6 +15,7 @@ function CategoryAdding({ setCategories }: CategoryAddingProps): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [isCreate, setCreate] = useState(false);
   const [titleText, setTitleText] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleClick = async (event: MouseEvent) => {
     const { name, tagName } = event.target as HTMLButtonElement;
@@ -25,7 +28,7 @@ function CategoryAdding({ setCategories }: CategoryAddingProps): JSX.Element {
         const category = await createCategory(titleText);
         setCategories((prevState) => [...prevState, category as Category]);
       } catch {
-        setLoading(false);
+        dispatch(setLogin(false));
       }
 
       setTitleText('');
