@@ -1,4 +1,6 @@
 import pathsConstants from '../constants/pathsConstants';
+import settingConstants from '../constants/settingConstants';
+import { getCookie } from './cookiesService';
 
 const {
   BASIC_URL,
@@ -50,11 +52,18 @@ export const createCard = async (
   const xhr = new XMLHttpRequest();
 
   xhr.open('POST', BASIC_URL + WORDS);
+  xhr.setRequestHeader('Authorization', `Basic ${getCookie(settingConstants.TOKEN_COOKIES_NAME)}`);
   xhr.responseType = 'json';
   formData.append('category', category);
   xhr.send(formData);
 
-  xhr.onload = () => resolve(xhr.response);
+  xhr.onload = () => {
+    if (xhr.status === 201) {
+      resolve(xhr.response);
+    } else {
+      reject(new Error('Unauthorized'));
+    }
+  };
   xhr.onerror = (err) => reject(err);
 });
 
@@ -67,12 +76,19 @@ export const updateCard = async (
   const xhr = new XMLHttpRequest();
 
   xhr.open('PATCH', BASIC_URL + WORDS);
+  xhr.setRequestHeader('Authorization', `Basic ${getCookie(settingConstants.TOKEN_COOKIES_NAME)}`);
   xhr.responseType = 'json';
   formData.append('_id', _id);
   formData.append('category', category);
   xhr.send(formData);
 
-  xhr.onload = () => resolve(xhr.response);
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      resolve(xhr.response);
+    } else {
+      reject(new Error('Unauthorized'));
+    }
+  };
   xhr.onerror = (err) => reject(err);
 });
 
@@ -81,11 +97,16 @@ export const deleteCard = async (_id: string) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Basic ${getCookie(settingConstants.TOKEN_COOKIES_NAME)}`,
     },
     body: JSON.stringify({ _id }),
   });
 
-  const json = await res.json();
+  if (res.ok) {
+    const json = await res.json();
 
-  return json;
+    return json;
+  }
+
+  throw new Error('Unauthorized');
 };

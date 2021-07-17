@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import contentConstants from '../../constants/contentConstants';
 import routesConstants from '../../constants/routesConstants';
+import settingConstants from '../../constants/settingConstants';
 import { login } from '../../services/authService';
 import { setCookie } from '../../services/cookiesService';
 import { setLogin } from '../Header/HamburgerMenu/hamburgerMenu';
@@ -27,7 +28,7 @@ function LoginForm({
 
     try {
       const data = await login(username, password);
-      setCookie('sessionid', data.token);
+      setCookie(settingConstants.TOKEN_COOKIES_NAME, data.token);
       dispatch(setLogin(true));
       onClose();
       setTimeout(() => history.push(routesConstants.ADMIN), 0);

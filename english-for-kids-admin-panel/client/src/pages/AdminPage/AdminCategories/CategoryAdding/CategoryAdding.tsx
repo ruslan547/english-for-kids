@@ -21,9 +21,13 @@ function CategoryAdding({ setCategories }: CategoryAddingProps): JSX.Element {
     if (name === 'create') {
       setLoading(true);
 
-      const category = await createCategory(titleText);
+      try {
+        const category = await createCategory(titleText);
+        setCategories((prevState) => [...prevState, category as Category]);
+      } catch {
+        setLoading(false);
+      }
 
-      setCategories((prevState) => [...prevState, category as Category]);
       setTitleText('');
       setCreate(false);
       setLoading(false);

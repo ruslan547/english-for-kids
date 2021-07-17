@@ -1,5 +1,7 @@
 import pathsConstants from '../constants/pathsConstants';
+import settingConstants from '../constants/settingConstants';
 import settingNumConstants from '../constants/settingNumConstants';
+import { getCookie } from './cookiesService';
 
 const {
   BASIC_URL,
@@ -36,13 +38,20 @@ export const getAllCategories = async (): Promise<{ categories: Category[], coun
 export const createCategory = async (title: string) => {
   const res = await fetch(BASIC_URL + CATEGORY, {
     method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json' }),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${getCookie(settingConstants.TOKEN_COOKIES_NAME)}`,
+    }),
     body: JSON.stringify({ title }),
   });
 
-  const json = await res.json();
+  if (res.ok) {
+    const json = await res.json();
 
-  return json;
+    return json;
+  }
+
+  throw new Error('Unauthorized');
 };
 
 export const updateCategories = async (_id: string, title: string) => {
@@ -50,13 +59,18 @@ export const updateCategories = async (_id: string, title: string) => {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Basic ${getCookie(settingConstants.TOKEN_COOKIES_NAME)}`,
     },
     body: JSON.stringify({ _id, title }),
   });
 
-  const json = await res.json();
+  if (res.ok) {
+    const json = await res.json();
 
-  return json;
+    return json;
+  }
+
+  throw new Error('Unauthorized');
 };
 
 export const deleteCategory = async (_id: string) => {
@@ -64,11 +78,16 @@ export const deleteCategory = async (_id: string) => {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Basic ${getCookie(settingConstants.TOKEN_COOKIES_NAME)}`,
     },
     body: JSON.stringify({ _id }),
   });
 
-  const json = await res.json();
+  if (res.ok) {
+    const json = await res.json();
 
-  return json;
+    return json;
+  }
+
+  throw new Error('Unauthorized');
 };

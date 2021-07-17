@@ -59,7 +59,7 @@ function CategoryCard({
       try {
         await deleteCategory(id);
         setCategories((prevState) => prevState.filter(({ _id }) => _id !== id));
-      } catch {
+      } catch (err) {
         setLoading(false);
       }
     } else if (name === 'add') {

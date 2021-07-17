@@ -30,9 +30,13 @@ function WordAdding({ category, setCards }: WordAddingProps): JSX.Element {
     if (name === 'create' && formRef.current) {
       setLoading(true);
 
-      const data = await createCard(formRef.current, category);
+      try {
+        const data = await createCard(formRef.current, category);
+        setCards((prevCards) => [...prevCards, data as Card]);
+      } catch {
+        setLoading(false);
+      }
 
-      setCards((prevCards) => [...prevCards, data as Card]);
       setWordText('');
       setTranslationText('');
       setCreate(false);

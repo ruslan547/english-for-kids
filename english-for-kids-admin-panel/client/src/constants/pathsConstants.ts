@@ -4,6 +4,7 @@ export default Object.freeze({
   ASSETS_DIR: '/assets',
   CATEGORY_PARAM: '/:id',
   BASIC_URL: 'https://peaceful-cliffs-83188.herokuapp.com',
+  // BASIC_URL: 'http://localhost:4000',
   LOGIN: '/login',
   CATEGORY: '/category',
   WORDS: '/words',
