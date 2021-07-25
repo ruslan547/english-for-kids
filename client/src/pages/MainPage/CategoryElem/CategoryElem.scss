@@ -1,0 +1,34 @@
+.category {
+  width: 300px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  color: var(--dark-color);
+  text-decoration: none;
+  margin: 20px 25px;
+  box-shadow: var(--shadow-color);
+  background: var(--bg-category);
+  border-radius: 8px;
+  font-size: 25px;
+}
+
+.category:hover {
+  box-shadow: var(--shadow-hov-color);
+}
+
+@media screen and (max-width: 390px) {
+  .category {
+    width: 230px;
+  }
+}
+
+.category__img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 10px solid var(--light-color);
+  box-sizing: border-box;
+  object-fit: cover;
+}

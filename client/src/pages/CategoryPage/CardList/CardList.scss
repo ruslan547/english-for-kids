@@ -1,0 +1,14 @@
+.card-list {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.category-title {
+  font-size: 25px;
+  color: var(--color-text);
+  text-align: center;
+}
