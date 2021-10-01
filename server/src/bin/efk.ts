@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { isApiError } from 'src/utils';
+
 require('dotenv').config();
 
 const debug = require('debug')('efk:server');
@@ -26,7 +28,7 @@ const startApp = async () => {
 
     app.listen(PORT, onListening);
   } catch (err) {
-    throw createError(500, err.message);
+    throw createError(500, isApiError(err) ? err.message : err);
   }
 };
 
