@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
-import { isApiError } from 'src/utils';
-
+/* eslint-disable import/first */
 require('dotenv').config();
 
-const debug = require('debug')('efk:server');
-const mongoose = require('mongoose');
-const createError = require('http-errors');
-const app = require('../app');
+import mongoose from 'mongoose';
+import createError, { UnknownError } from 'http-errors';
+import createDebug from 'debug';
+import app from 'src/app';
 
 const PORT = process.env.PORT || 4000;
 const APP_NAME = 'efk';
+
+const debug = createDebug('efk:server');
 
 const onListening = () => {
   const message = `Listening on ${PORT}\n`;
@@ -21,14 +22,14 @@ const onListening = () => {
 
 const startApp = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_DB, {
+    await mongoose.connect(process.env.MONGO_DB as string, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
     app.listen(PORT, onListening);
   } catch (err) {
-    throw createError(500, isApiError(err) ? err.message : err);
+    throw createError(500, err as UnknownError);
   }
 };
 

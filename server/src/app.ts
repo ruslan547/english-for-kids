@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import morgan from 'morgan';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import createError from 'http-errors';
 import multer from 'multer';
 import swaggerUi from 'swagger-ui-express';
@@ -22,7 +21,7 @@ const loader = multer({ dest: path.join(__dirname, 'tmp') });
 
 app.use(morgan('tiny'));
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 app.use(routesConstants.REGISTRATION, validateAuthParam, registrationRouter);
@@ -58,4 +57,4 @@ app.use((error: createError.HttpError, req: Request, res: Response, next: NextFu
   });
 });
 
-module.exports = app;
+export default app;
